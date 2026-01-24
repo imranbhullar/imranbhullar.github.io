@@ -17,9 +17,7 @@ In this post, we will cover the installation of **Terraform** and the **AWS CLI*
 
 Terraform is distributed as a single binary. While you can download it manually, using a package manager is the best way to handle future updates and dependencies.
 
-### Linux (Ubuntu / Debian)
-
-```bash
+### Linux (Ubuntu / 
 sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
 
 wget -O- https://apt.releases.hashicorp.com/gpg \
