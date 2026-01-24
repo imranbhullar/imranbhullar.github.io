@@ -13,26 +13,26 @@ I am a **Senior Cloud & Infrastructure Engineer** and **Technical Trainer** with
 
 ##  Technical Trainer & Mentor
 Beyond engineering, I am passionate about knowledge sharing and professional development. My experience as a trainer includes:
-* **Mentorship:** I have guided over 10 engineers in mastering Linux operations, cloud management, and DevOps best practices.
+* **Mentorship:** I have guided Cloud/DevOps engineers in mastering Linux operations, cloud management, and DevOps best practices.
 * **Workshop Facilitation:** Designing and leading technical training sessions on infrastructure automation and CI/CD workflows.
-* **Adoption Driver:** I actively drive the adoption of modern cloud technologies and automation tools within engineering teams.
+* **Adoption Driver:** I actively drive the adoption of and migration to cloud-native technologies and automation tools within engineering teams.
 
 ---
 
 ##  Professional Expertise
 My career is built on a foundation of deep Linux administration and modern Cloud-Native architecture:
-* **Cloud Platforms:** Architecting and optimizing services on **Azure and AWS**.
+* **Cloud Platforms:** Architecting and optimizing services in Cloud including but not limited to **AWS**.
 * **Linux Excellence:** 8+ years of dedicated experience managing mission-critical Linux environments (openSUSE, Ubuntu, RHEL).
 * **DevOps & IaC:** Expert-level use of **Terraform**, **Ansible**, **Jenkins**, and **Vagrant** to automate infrastructure lifecycles.
-* **Network Engineering:** Strong background in managing high-availability infrastructure, including Cisco and MikroTik systems.
+* **Network Engineering:** Strong background in managing high-availability infrastructure, including but not limited to Cisco systems.
 
 ---
 
 ##  Why This Blog?
 This site serves as my **Personal Knowledge Base (PKB)**. It is a place where I document:
-1. **The "Linux Drill-Master":** Essential how-tos and CLI troubleshooting guides (e.g., `lsof`, `fuser`, process management).
+1. **The "Linux Drill-Master":** Essential how-tos and CLI troubleshooting guides.
 2. **Cloud Analysis:** Deep-dives into cloud architecture and migration strategies.
-3. **Certification Journey:** Tracking my current sprint toward nine technical certifications in 2026.
+3. **Guides to the DevOps Journey:** Comprehensive guides and roadmaps for mastering DevOps Mindset, technologies and tools.
 
 ---
 
