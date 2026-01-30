@@ -69,6 +69,4 @@ If a log file is getting too huge and you want to clear the content without dele
 Monitor a file as it grows—ideal for watching web server logs or application output:
 ```bash
 tail -f /var/log/nginx/access.log
-Which of these is your favorite? Drop a comment below if you have a "go-to" command that I missed!
-
 ```
