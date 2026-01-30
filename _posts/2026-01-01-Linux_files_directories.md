@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "The Ultimate Guide to Linux File and Directory Mastery"
-date: 2026-01-30 14:00:00 +0000
+date: 2026-01-29 14:00:00 +0000
 description: "From filtering directory listings to advanced brace expansion and safe file deletion—master the Linux command line with these essential tips and tricks."
 categories: [Tips and Tricks, Linux]
 ---
