@@ -5,6 +5,7 @@ date: 2026-01-30 14:00:00 +0000
 description: "From filtering directory listings to advanced brace expansion and safe file deletion—master the Linux command line with these essential tips and tricks."
 categories: [Tips and Tricks, Linux]
 ---
+![nix](/assets/img/Linux_unix_bsd.png)
 
 Whether you are a sysadmin or a hobbyist, the Linux terminal offers incredible power if you know the right shortcuts. Here is a curated list of tips to help you manage files and directories like a pro.
 
