@@ -122,3 +122,99 @@ set autoboot=true
 ```
 zonepath defines where the zone will reside
 autoboot=true ensures the zone starts automatically after system reboot
+
+### Step 5: Configure Networking
+```bash
+add net
+set address=192.168.56.200
+set physical=e1000g1
+end
+```
+This assigns a dedicated IP address to the zone using the specified physical interface.
+
+### Step 6: Configure Memory Limits
+```bash
+add capped-memory
+set physical=512m
+set swap=512m
+end
+```
+Resource limits prevent a single zone from exhausting system memory.
+###  Step 7: Verify and Save Configuration
+
+```bash
+verify
+commit
+exit
+```
+At this stage, the zone is successfully configured.
+
+### Step 8: Install the Zone
+```bash
+zoneadm -z solzone install
+```
+Solaris installs the required OS packages into the zone.
+This step may take several minutes.
+
+### Step 9: Prepare the Zone
+```bash
+zoneadm -z solzone ready
+```
+This prepares kernel-level resources required to start the zone.
+### Step 10: Boot the Zone
+```bash
+zoneadm -z solzone boot
+```
+The zone transitions into the Running state.
+
+### Step 11: Access the Zone Console
+```bash
+zlogin -C solzone
+```
+This opens the zone console for initial setup such as:
+
+* Root password
+* Timezone
+* System configuration
+
+##  Common Administration Commands 
+### List All Zones
+```bash
+zoneadm list -v
+```
+### Halt a Zone
+```bash
+zoneadm -z solzone halt
+```
+Stops the zone safely.
+### Reboot a Zone 
+```bash
+zoneadm -z solzone reboot
+```
+### Modify Zone Configuration 
+```bash
+zonecfg -z solzone
+```
+(Used to update memory, network, or other settings, the zone must be halted before modification.)
+### Uninstall a Zone
+```bash
+zoneadm -z solzone uninstall
+```
+Removes installed packages but keeps the zone definition.
+### Delete Zone Completely
+```bash
+zonecfg -z solzone delete
+```
+Permanently removes the zone configuration.
+
+### Final Thoughts
+
+Solaris Zones were far ahead of their time.
+
+They provide:
+* Near-native performance
+* Strong isolation
+* Excellent resource control
+* Minimal overhead
+
+Many modern container technologies (LXC, Docker etc.) follow the same core principles originally introduced by Solaris Zones and BSD Jails.
