@@ -22,7 +22,34 @@ To utilize IPS functionality with OpenCSW in Oracle Solaris 10, follow these ste
    ```bash
    gunzip pkgutil-2.4,REV=2011.05.15-SunOS5.8-i386-CSW.pkg.gz
    ```
-2. **Unzip the downloaded package:**
+3. **Unzip the downloaded package:**
 ```bash
 pkgadd -d pkgutil-2.4,REV=2011.05.15-SunOS5.8-i386-CSW.pkg
 ```
+4. Fetch the latest catalog:
+```bash
+pkgutil --catalog
+```
+
+5. Install any package with all dependencies:
+```bash
+pkgutil -i vim
+```
+
+### 2. BlastWave
+To achieve IPS functionality using BlastWave in Oracle Solaris 10, follow these steps:
+1. Download the package: Visit BlastWave or download directly: http://download.blastwave.org/csw/pkgutil_i386.pkg
+2. Install the package:
+```bash
+pkgadd -d pkgutil_i386.pkg
+```
+3. Fetch the latest catalog:
+```bash
+pkgutil --catalog
+```
+4. Install any package with all dependencies:
+```bash
+pkgutil -i vsftpd
+```
+
+Alhamdulillah, you're done! Now you can install most of the packages used in Solaris with confidence.
