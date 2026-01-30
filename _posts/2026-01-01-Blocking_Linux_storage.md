@@ -6,6 +6,7 @@ description: "A step-by-step guide on how to disable USB mass storage devices in
 categories: [Linux, Security]
 tags: [Tips and Tricks, Linux, SysAdmin]
 ---
+![nix](/assets/img/Linux_unix_bsd.png)
 
 ## Disabling Mass Storage in Linux-Based Distros
 
