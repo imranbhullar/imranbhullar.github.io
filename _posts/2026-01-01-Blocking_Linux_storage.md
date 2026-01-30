@@ -19,13 +19,13 @@ If a USB device is currently connected, unmount it first:
 ```
 Note: The device name (e.g., /dev/sdb) may vary depending on your system configuration.
 
-2. Remove the USB storage module
+### 2. Remove the USB storage module
 Manually remove the driver currently loaded in the kernel:
 ```bash
 [root@centos ~]# modprobe -r usb_storage
 ```
 
-3. Blacklist the module
+### 3. Blacklist the module
 To make this change permanent so the module doesn't load on the next reboot or when a device is plugged in, edit the blacklist configuration file:
 
 Open /etc/modprobe.d/blacklist.conf (or create it if it doesn't exist) and add the following line:
