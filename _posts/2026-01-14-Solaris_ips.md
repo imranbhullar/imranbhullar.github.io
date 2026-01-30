@@ -6,6 +6,9 @@ date: 2011-08-15 12:00:00 +0000
 categories: [nix Howto's]
 tags: [solaris, ips, opencsw, blastwave]
 ---
+![nix*](/assets/img/Linux_unix_bsd.png)
+
+
 
 In Standard Solaris, IPS (Image Packaging System) is exclusively a feature of Oracle Solaris 11. While Oracle Solaris 10 provides some tools to achieve similar functionality, their use in production environments raises questions about reliability.
 
