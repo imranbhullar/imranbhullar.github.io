@@ -25,7 +25,8 @@ Finding and replacing text efficiently within a file is a key skill for managing
 Instead of just opening a file and scrolling, use these flags to jump directly to your target.
 
 * **`vim +$ ~/hosts`**: Open the file and jump directly to the **last line**.
-* **`vim +8 ~/hosts`**: Open the file and jump to **line 8**.
+* **`vim +8 ~/hosts`**: Open the file and jump to ![nix](/assets/img/Linux_unix_bsd.png)
+**line 8**.
 * **`vim +/linux/ ~/hosts`**: Open the file and jump to the first occurrence of the word **"linux"**.
 * **`vimtutor`**: Launch the built-in tutorial to practice Vim basics directly in the terminal.
 
