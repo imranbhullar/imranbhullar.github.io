@@ -89,7 +89,7 @@ Monitor a file as it grows—ideal for watching web server logs or application o
 ```bash
 tail -f /var/log/nginx/access.log
 ```
-## Understanding `ls -l` Output
+### 13. Understanding `ls -l` Output
 
 When you run `ls -l`, the output provides a wealth of metadata. Here is a breakdown of what those characters represent:
 
@@ -103,4 +103,14 @@ When you run `ls -l`, the output provides a wealth of metadata. Here is a breakd
 * `drwxrwxr-x`: A directory where the owner and group have full access, others can only read/execute.
 * `-rw-rw-r--`: A regular file where the owner and group can read/write, others can only read.
 
----
+### 14. Advanced File Operations
+
+Safe file management is critical when working on production systems.
+
+### Secure Backups
+* **`cp --backup=numbered /etc/hosts ~`**: Creates a numbered backup (e.g., `hosts.~1~`) of a file. This is an excellent safety net before making manual configuration changes.
+
+### Core Concepts
+* **`cp` vs `mv`**: 
+    * **`cp` (Copy)**: Creates a duplicate of the data, leaving the original intact.
+    * **`mv` (Move/Rename)**: Relocates the file or changes its name. On the same filesystem, this only updates the file's metadata (inode reference), making it nearly instantaneous.
