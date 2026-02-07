@@ -56,6 +56,7 @@ If you run `man passwd`, you get help for the *command* to change a password. If
 1. **Section 1:** User Commands (e.g., `ls`, `mkdir`)
 2. **Section 5:** File Formats (e.g., `/etc/hosts`, config files)
 3. **Section 8:** System Administration commands (e.g., `iptables`, `fdisk`)
+
 ---
 
 
