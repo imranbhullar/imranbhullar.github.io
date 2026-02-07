@@ -3,7 +3,7 @@ layout: post
 title: "Linux Archiving & Compression: From Tar to Cpio"
 date: 2026-02-07
 categories: [Linux, SysAdmin]
-tags: [bash, archiving, backup, devops]
+tags: [LFCS, bash, archiving, backup, devops]
 ---
 ![nix](/assets/img/Linux_unix_bsd.png)
 

@@ -3,7 +3,7 @@ layout: post
 title: "The Linux Survival Guide: How to Get Help from the Command Line"
 date: 2025-10-12 13:40:00 +0500
 categories: [Linux, Tutorial]
-tags: [Command Line, SysAdmin, Troubleshooting, Documentation]
+tags: [LFCS, Command Line, SysAdmin, Troubleshooting, Documentation]
 description: "Don't get stuck in the terminal. Learn the essential commands to find documentation, manuals, and command usage directly from the Linux CLI."
 ---
 ![nix](/assets/img/Linux_unix_bsd.png)
