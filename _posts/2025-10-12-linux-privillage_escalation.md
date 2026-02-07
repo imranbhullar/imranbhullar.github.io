@@ -65,6 +65,7 @@ without being prompted for a password.
     /usr/bin/journalctl *, \
     /usr/bin/apt update, \
     /usr/bin/apt upgrade
+```
 ---
 
 ## 3. Polkit (PolicyKit)
