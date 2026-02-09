@@ -24,7 +24,7 @@ sudo apt-get install build-essential apache2 php5-gd wget libgd2-xpm libgd2-xpm-
 Create User and Group
 Create a nagios user and a group for allowing external commands to be passed through the web interface:
 
-```Bash
+```bash
 sudo useradd -m -s /bin/bash nagios
 sudo passwd nagios
 
@@ -35,7 +35,7 @@ sudo usermod -a -G nagcmd www-data
 Download and Extract Nagios
 Download the Nagios Core and Plugins source code (adjust version numbers as necessary):
 
-```Bash
+```bash
 mkdir ~/downloads
 cd ~/downloads
 wget [http://prdownloads.sourceforge.net/sourceforge/nagios/nagios-3.3.1.tar.gz](http://prdownloads.sourceforge.net/sourceforge/nagios/nagios-3.3.1.tar.gz)
@@ -47,7 +47,7 @@ cd nagios
 Compile and Install
 Run the configuration script and compile the binaries:
 
-```Bash
+```bash
 ./configure --with-command-group=nagcmd
 make all
 sudo make install
@@ -58,23 +58,23 @@ sudo make install-commandmode
 Configure the Web Interface
 Install the Nagios web config file in the Apache conf.d directory:
 
-```Bash
+```bash
 sudo make install-webconf
 ```
 Create a nagiosadmin account for logging into the Nagios web interface:
 
-```Bash
+```bash
 sudo htpasswd -c /usr/local/nagios/etc/htpasswd.users nagiosadmin
 ```
 Restart Apache to make the new settings take effect:
 
-```Bash
+```bash
 sudo /etc/init.d/apache2 reload
 ```
 Install Nagios Plugins
 Now, compile and install the plugins:
 
-```Bash
+```bash
 cd ~/downloads
 tar xzf nagios-plugins-1.4.15.tar.gz
 cd nagios-plugins-1.4.15
