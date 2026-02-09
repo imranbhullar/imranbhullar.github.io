@@ -2,9 +2,11 @@
 layout: post
 title: "Nagios on Ubuntu"
 date: 2012-01-20 10:00:00 +0000
+description: "A comprehensive step-by-step guide to installing and configuring Nagios Core from source on Ubuntu, including dependency setup and web interface configuration."
 categories: [Tutorials, Linux]
 tags: [nagios, ubuntu, monitoring]
 ---
+![nix](/assets/img/Linux_unix_bsd.png)
 
 Nagios is a powerful monitoring system that enables organizations to identify and resolve IT infrastructure problems before they affect critical business processes. In this post, I will walk through the basic steps to get Nagios up and running on an Ubuntu system.
 
