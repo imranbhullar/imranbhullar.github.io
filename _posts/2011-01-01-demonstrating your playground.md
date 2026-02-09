@@ -19,9 +19,9 @@ shell_name -i |& tee /tmp/show
 ```
 
 ## How it works:
-* **-i**: Runs the shell in interactive mode.
-* **|&**: This is a Bash shortcut that pipes both stdout (standard output) and stderr (errors) to the next command.
-* **tee**: Reads from the pipe and writes to both the screen and a file simultaneously.
+* `-i`: Runs the shell in interactive mode.
+* `|&`: This is a Bash shortcut that pipes both stdout (standard output) and stderr (errors) to the next command.
+* `tee`: Reads from the pipe and writes to both the screen and a file simultaneously.
 
 
 ## How Others Can Watch
