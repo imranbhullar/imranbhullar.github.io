@@ -23,7 +23,7 @@ netstat -atnp | grep 111
 Configuration Path: `/etc/exports`
 Log File: `/var/log/messages`
 
-*  **Sharing Files and Directories** 
+## Sharing Files and Directories
 To share a file or directory, you need to specify its path in the `/etc/exports` file using the following format:
 
 `sharename ID/IP permissions`
@@ -43,7 +43,7 @@ This shares the `/crackers` directory with all users from the `blackhats.com` do
 `/crackers *.blackhats.com(ro,sync) EXCEPT godfather.blackhats.com(rw,async)`
 This grants read-only access to all users from the `blackhats.com` domain, while `godfather.blackhats.com` has read-write access with async visibility.
 
-* **Accessing NFS Shares**
+## Accessing NFS Shares
 To access network shares, you must mount them using the following command:
 
 `mount /source:/path@server /Destination`
