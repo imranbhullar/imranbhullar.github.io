@@ -16,6 +16,7 @@ The `tar` (Tape ArChive) command is the most common utility for collecting multi
 * **-c**: Create a new archive.
 * **-v**: Verbose (see the files being added).
 * **-f**: Specify the filename.
+* **-S**:  Handle sparse files.
 ```bash
 tar -cvf etc.tar /etc
 #Decompress (Extract) -x: Extract files from an archive.
@@ -46,7 +47,15 @@ tar -cJvf etc.tar.xz /etc
 # Decompress via tar
 tar -xJvf etc.tar.xz
 ```
+### Creating a Backup of Sparse Files
+Sparse files are files that contain empty blocks, which can take up less disk space. To efficiently create and manage backups of sparse files, you can use the tar command with the --sparse option. Here's a quick guide on how to do this.
+```bash
+#Creating a Backup of Sparse Files
 
+tar cvSf file.tar.bz2 sparsefile
+# Decompress via tar
+tar xSf file.tar.bz2
+```
 
 ## 2. gzip Command
 
@@ -101,6 +110,8 @@ xzcat file.txt.xz
 #or
 xzless file.txt.xz
 ```
+
+
 
 | Feature           | gzip       | xz               |
 | ----------------- | ---------- | ---------------- |
