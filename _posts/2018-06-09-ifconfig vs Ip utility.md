@@ -6,13 +6,14 @@ description: "The classic ifconfig command is being phased out. Learn how to per
 categories: [Linux, Networking]
 tags: [ifconfig, iproute2, sysadmin, terminal, networking]
 ---
+![nix](/assets/img/posts/iconfig_ip.png)
 
 Like most system admins, I love the standard set of Unix commands we've used for decades. One of the most widely used has always been `ifconfig`. However, as many of you have noticed, `ifconfig` is being replaced by the more powerful `ip` command.
 
 While `ifconfig` isn't going anywhere immediately, it is considered legacy. With the `ip` command now standard on almost all modern Linux distributions, it’s time to make the switch. In this post, we’ll look at how to get the same functionality from the `ip` utility that we used to get from `ifconfig` and `route`.
 
 ---
-![nix](/assets/img/posts/iconfig_ip.png)
+
 
 ### Network Interface Information
 To view your network devices and their current configurations.
