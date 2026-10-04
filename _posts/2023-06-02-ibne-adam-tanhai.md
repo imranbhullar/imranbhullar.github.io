@@ -1,13 +1,13 @@
 ---
 layout: post
 title: "ابنِ آدم اور تنہائی "
-date: 2023-01-12
+date: 2023-06-02
 description: "ابنِ آدم اور تنہائی "
 categories: [Urdu, nasar]
 tags: [Urdu, Nasar]
 rtl: true
 ---
-![Mohabbat](/assets/img/ibne-adam_tanhai.jpeg)
+![Tanhai](/assets/img/ibne-adam_tanhai.jpeg)
 
 <p align="right" dir="rtl">
  

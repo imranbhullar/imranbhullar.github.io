@@ -1,13 +1,13 @@
 ---
 layout: post
 title: "ھم کلامی ۔ انسان اور امید "
-date: 2023-01-12
+date: 2023-05-01
 description: "ھم کلامی ۔ انسان اور امید"
 categories: [Urdu, nasar]
 tags: [Urdu, Nasar]
 rtl: true
 ---
-![Mohabbat](/assets/img/isan-aur-ummeed.jpeg)
+![Ummeed](/assets/img/isan-aur-ummeed.jpeg)
 
 <p align="right" dir="rtl">
  

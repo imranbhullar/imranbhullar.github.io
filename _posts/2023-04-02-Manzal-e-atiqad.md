@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "منزلِ اعتقاد "
-date: 2023-01-12
+date: 2023-04-02
 description: " منزلِ اعتقاد  "
 categories: [Urdu, nasar]
 tags: [Urdu, Nasar]

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "خُدا اور محبت"
-date: 2023-01-12
+date: 2023-01-02
 description: " خُدا اور محبت "
 categories: [Urdu, nasar]
 tags: [Urdu, Nasar]
