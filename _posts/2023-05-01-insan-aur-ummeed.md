@@ -2,7 +2,7 @@
 layout: post
 title: "ھم کلامی ۔ انسان اور امید "
 date: 2023-01-12
-description: "ھم کلامی ۔ انسان اور امید
+description: "ھم کلامی ۔ انسان اور امید"
 categories: [Urdu, nasar]
 tags: [Urdu, Nasar]
 rtl: true
