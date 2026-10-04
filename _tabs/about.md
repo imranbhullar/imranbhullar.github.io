@@ -33,6 +33,7 @@ This site serves as my **Personal Knowledge Base (PKB)**. It is a place where I 
 1. **The "Linux Drill-Master":** Essential how-tos and CLI troubleshooting guides.
 2. **Cloud Analysis:** Deep-dives into cloud architecture and migration strategies.
 3. **Guides to the DevOps Journey:** Comprehensive guides and roadmaps for mastering DevOps Mindset, technologies and tools.
+4. **Urdu Literature & Reflections (نثر، نظم اور افکار):** My Urdu writings, poetry, and reflections on religion, life, humanity, and ideas.
 
 ---
 
