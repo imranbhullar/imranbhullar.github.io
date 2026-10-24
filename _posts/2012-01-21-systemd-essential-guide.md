@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "systemd: Managing Services, Boot Behaviour, and Custom Apps the Right Way"
-date: Jan-14-2012
+date: Jan-21-2012
 categories: [Linux, DevOps]
 tags: [linux, systemd, services, boot, troubleshooting, automation]
 image: /assets/img/Linux_unix_bsd.png
