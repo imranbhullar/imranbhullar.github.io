@@ -29,7 +29,23 @@ lsof -a -u deploy -i
 
 *Tip:* `lsof +D /mnt/data` recursively lists every open file under a directory, which is perfect for tracking down the culprit when `umount` reports "target is busy".
 
-## Checking Disk Usage Visually and Fast with ncdu
+## Checking Disk Usage Visually and Fast with df, du, and ncdu
+
+`df` answers "how full is each filesystem?" while `du` answers "what is eating the space inside this directory?". Together they cover the two questions you ask first when a disk fills up, and `ncdu` gives you an interactive view on top of `du`.
+
+```bash
+# Filesystem-level usage, human-readable, excluding tmpfs and friends
+df -hT -x tmpfs -x devtmpfs
+
+# Inodes, which fill up independently of bytes
+df -i
+
+# Directory sizes, one level deep, sorted largest first
+du -xh --max-depth=1 /var | sort -rh | head -20
+
+# Total size of a single directory
+du -sh /var/log
+```
 
 `ncdu` is an interactive `du` replacement that lets you drill into directories with the arrow keys instead of re-running commands. It scans a tree you can browse, sorts by size so the biggest offenders surface instantly, and even lets you delete files from within the UI (with confirmation).
 
@@ -47,7 +63,7 @@ ncdu -x /var
 ncdu -o /tmp/var-scan.json /var
 ```
 
-*Tip:* On servers where you can't install packages, `du -xh --max-depth=1 /var | sort -rh | head -20` gets you 90% of the way there.
+*Tip:* A full disk is not always a full disk. If `df -h` shows space free but writes still fail, check `df -i` for exhausted inodes, and remember that deleted files held open by a process keep consuming space until that process is restarted or the file is truncated.
 
 ## Finding Process Resource Hogs Instantly with ps and awk
 
@@ -66,6 +82,19 @@ ps -eo user,rss --no-headers | awk '{sum[$1]+=$2} END {for (u in sum) printf "%-
 
 *Tip:* `ps aux --sort=-%cpu | head` is the muscle-memory one-liner, but `ps -eo ... --sort` avoids the parsing headaches of the BSD-style output.
 
+For a rolling view rather than a snapshot, `pidstat` reports per-process CPU, memory, and I/O at a fixed interval, which is far more useful than a single `ps` sample when you are chasing a spike.
+
+```bash
+# Per-process CPU every 2 seconds, 5 samples
+pidstat -u 2 5
+
+# Per-process memory and I/O
+pidstat -r -d 2 5
+
+# Disk I/O by process, the fastest way to find a noisy writer
+sudo iotop -oPa
+```
+
 ## Monitoring Log Files in Real-Time with Color Highlighting Using tail and grep
 
 Watching logs live is table stakes; highlighting the lines that matter is what saves your eyes at 3 a.m. Follow a log as it grows, colorize errors, warnings, or specific request IDs, and chain `grep` filters to cut the noise.
@@ -83,6 +112,19 @@ tail -f /var/log/app/app.log | grep --color=always "req_id=abc123"
 
 *Tip:* Pipe through `grep --line-buffered` when chaining filters, otherwise output can sit in the buffer and defeat the point of `tail -f`.
 
+On systemd hosts, `journalctl` replaces most of the file hunting and adds filtering by unit, priority, and time window.
+
+```bash
+# Follow a specific service's logs
+journalctl -u nginx -f
+
+# Only errors and above, since the last boot
+journalctl -p err -b
+
+# Everything from the last 15 minutes
+journalctl --since "15 min ago"
+```
+
 ## Tracking System Performance Metrics in Real-Time with htop
 
 `htop` is the interactive upgrade to `top`: colorized meters, per-core CPU graphs, and mouse-friendly process management. You get per-core CPU, memory, and swap usage at a glance, can search and filter processes with `F4` / `F3`, and can kill, renice, or trace a process without ever leaving the UI.
@@ -99,6 +141,19 @@ htop -u www-data
 ```
 
 *Tip:* Press `F2` → *Display options* → enable *Detailed CPU time* to see steal time. It is the first thing to check when a VM feels slow but nothing inside it looks busy.
+
+When you need the same data without an interactive UI, `vmstat` and `ss` cover the two most common follow-up questions: is the system swapping, and what is actually listening.
+
+```bash
+# CPU, memory, swap, and I/O every 2 seconds
+vmstat 2
+
+# Listening TCP sockets with the owning process
+sudo ss -tlnp
+
+# All established connections, grouped by state
+ss -tan state established
+```
 
 ## Managing Background Jobs and Terminal Processes with jobs and fg
 
