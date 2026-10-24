@@ -7,11 +7,11 @@ tags: [linux, system-monitoring, troubleshooting, performance, processes]
 image: /assets/img/Linux_unix_bsd.png
 ---
 
-When a Linux box starts misbehaving, the clock is already ticking — every second spent fumbling for the right command is a second of downtime. These are the fast, battle-tested tricks I reach for first when I need to see what the system is actually doing.
+When a Linux box starts misbehaving, the clock is already ticking. Every second spent fumbling for the right command is a second of downtime. These are the fast, battle-tested tricks I reach for first when I need to see what the system is actually doing.
 
 ## Investigating Open Files and Active Network Ports with lsof
 
-`lsof` ("list open files") shows every file, socket, and device held open by a process — on Linux, everything is a file. You can list everything a single PID has open, find which process is holding a file (handy before unmounting a busy filesystem), or map a listening network port back to its owning process.
+`lsof` ("list open files") shows every file, socket, and device held open by a process. On Linux, everything is a file. You can list everything a single PID has open, find which process is holding a file (handy before unmounting a busy filesystem), or map a listening network port back to its owning process.
 
 ```bash
 # All open files for PID 1234
@@ -116,7 +116,7 @@ disown %1        # detach job 1 so it survives logout
 
 ## Added Bonus Command: Checking Available System Memory Instantly with free -h
 
-`free -h` is the fastest way to answer "do we have memory pressure?" without opening a monitoring tool. It gives you human-readable totals for RAM and swap, and the `available` column is the one that matters — `free` is misleading on Linux because of caching.
+`free -h` is the fastest way to answer "do we have memory pressure?" without opening a monitoring tool. It gives you human-readable totals for RAM and swap, and the `available` column is the one that matters. The `free` column is misleading on Linux because of caching.
 
 ```bash
 # Human-readable memory summary
