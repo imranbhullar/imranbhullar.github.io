@@ -27,7 +27,7 @@ lsof -iTCP:8080 -sTCP:LISTEN
 lsof -a -u deploy -i
 ```
 
-*Tip:* `lsof +D /mnt/data` recursively lists every open file under a directory — perfect for tracking down the culprit when `umount` reports "target is busy".
+*Tip:* `lsof +D /mnt/data` recursively lists every open file under a directory, which is perfect for tracking down the culprit when `umount` reports "target is busy".
 
 ## Checking Disk Usage Visually and Fast with ncdu
 
@@ -98,7 +98,7 @@ htop -t
 htop -u www-data
 ```
 
-*Tip:* Press `F2` → *Display options* → enable *Detailed CPU time* to see steal time — the first thing to check when a VM feels slow but nothing inside it looks busy.
+*Tip:* Press `F2` → *Display options* → enable *Detailed CPU time* to see steal time. It is the first thing to check when a VM feels slow but nothing inside it looks busy.
 
 ## Managing Background Jobs and Terminal Processes with jobs and fg
 
@@ -112,7 +112,7 @@ fg %2            # bring job 2 to the foreground
 disown %1        # detach job 1 so it survives logout
 ```
 
-*Tip:* For anything you actually care about surviving a dropped SSH session, use `tmux` or `nohup` — `disown` helps, but a multiplexer is the real answer.
+*Tip:* For anything you actually care about surviving a dropped SSH session, use `tmux` or `nohup`. `disown` helps, but a multiplexer is the real answer.
 
 ## Added Bonus Command: Checking Available System Memory Instantly with free -h
 
@@ -129,4 +129,4 @@ free -h -s 2
 free -h | awk '/^Mem:/ {print "Available: " $7}'
 ```
 
-*Tip:* Ignore the `free` column and watch `available` — Linux deliberately uses spare RAM for page cache, and a low `free` value is usually a healthy system, not a problem.
+*Tip:* Ignore the `free` column and watch `available`. Linux deliberately uses spare RAM for page cache, so a low `free` value is usually a healthy system, not a problem.
