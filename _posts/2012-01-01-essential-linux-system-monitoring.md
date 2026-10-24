@@ -11,11 +11,7 @@ When a Linux box starts misbehaving, the clock is already ticking — every seco
 
 ## Investigating Open Files and Active Network Ports with lsof
 
-`lsof` ("list open files") shows every file, socket, and device held open by a process — on Linux, everything is a file.
-
-- List all open files for a given process by PID.
-- Find which process is holding a file open (handy before unmounting a busy filesystem).
-- Map listening network ports back to their owning process.
+`lsof` ("list open files") shows every file, socket, and device held open by a process — on Linux, everything is a file. You can list everything a single PID has open, find which process is holding a file (handy before unmounting a busy filesystem), or map a listening network port back to its owning process.
 
 ```bash
 # All open files for PID 1234
@@ -35,11 +31,7 @@ lsof -a -u deploy -i
 
 ## Checking Disk Usage Visually and Fast with ncdu
 
-`ncdu` is an interactive `du` replacement that lets you drill into directories with the arrow keys instead of re-running commands.
-
-- Scan a directory tree and browse it interactively.
-- Sort by size to surface the biggest offenders instantly.
-- Delete files from within the UI (with confirmation).
+`ncdu` is an interactive `du` replacement that lets you drill into directories with the arrow keys instead of re-running commands. It scans a tree you can browse, sorts by size so the biggest offenders surface instantly, and even lets you delete files from within the UI (with confirmation).
 
 ```bash
 # Install on Debian/Ubuntu
@@ -59,11 +51,7 @@ ncdu -o /tmp/var-scan.json /var
 
 ## Finding Process Resource Hogs Instantly with ps and awk
 
-`ps` gives you a snapshot; `awk` turns that snapshot into a ranked list.
-
-- Sort processes by CPU or memory consumption.
-- Filter out kernel threads and noise.
-- Print only the columns you care about.
+`ps` gives you a snapshot; `awk` turns that snapshot into a ranked list. Together they let you sort processes by CPU or memory consumption, filter out kernel threads and noise, and print only the columns you actually care about.
 
 ```bash
 # Top 10 processes by CPU usage
@@ -80,11 +68,7 @@ ps -eo user,rss --no-headers | awk '{sum[$1]+=$2} END {for (u in sum) printf "%-
 
 ## Monitoring Log Files in Real-Time with Color Highlighting Using tail and grep
 
-Watching logs live is table stakes; highlighting the lines that matter is what saves your eyes at 3 a.m.
-
-- Follow a log file as it grows.
-- Highlight errors, warnings, or specific request IDs in color.
-- Combine with `grep` filters to cut the noise.
+Watching logs live is table stakes; highlighting the lines that matter is what saves your eyes at 3 a.m. Follow a log as it grows, colorize errors, warnings, or specific request IDs, and chain `grep` filters to cut the noise.
 
 ```bash
 # Follow a log with colored matches
@@ -101,11 +85,7 @@ tail -f /var/log/app/app.log | grep --color=always "req_id=abc123"
 
 ## Tracking System Performance Metrics in Real-Time with htop
 
-`htop` is the interactive upgrade to `top`: colorized meters, per-core CPU graphs, and mouse-friendly process management.
-
-- View per-core CPU, memory, and swap usage at a glance.
-- Search and filter processes with `F4` / `F3`.
-- Kill, renice, or trace a process without leaving the UI.
+`htop` is the interactive upgrade to `top`: colorized meters, per-core CPU graphs, and mouse-friendly process management. You get per-core CPU, memory, and swap usage at a glance, can search and filter processes with `F4` / `F3`, and can kill, renice, or trace a process without ever leaving the UI.
 
 ```bash
 # Install on Debian/Ubuntu
@@ -122,11 +102,7 @@ htop -u www-data
 
 ## Managing Background Jobs and Terminal Processes with jobs and fg
 
-Shell job control lets you juggle long-running tasks in a single terminal without opening new tabs.
-
-- List jobs started from the current shell.
-- Bring a suspended job back to the foreground.
-- Resume a job in the background.
+Shell job control lets you juggle long-running tasks in a single terminal without opening new tabs. You can list the jobs started from the current shell, bring a suspended job back to the foreground, or resume one in the background.
 
 ```bash
 # Start a long task, suspend it with Ctrl+Z, then:
@@ -140,10 +116,7 @@ disown %1        # detach job 1 so it survives logout
 
 ## Added Bonus Command: Checking Available System Memory Instantly with free -h
 
-`free -h` is the fastest way to answer "do we have memory pressure?" without opening a monitoring tool.
-
-- Human-readable totals for RAM and swap.
-- The `available` column is the one that matters — `free` is misleading on Linux because of caching.
+`free -h` is the fastest way to answer "do we have memory pressure?" without opening a monitoring tool. It gives you human-readable totals for RAM and swap, and the `available` column is the one that matters — `free` is misleading on Linux because of caching.
 
 ```bash
 # Human-readable memory summary
