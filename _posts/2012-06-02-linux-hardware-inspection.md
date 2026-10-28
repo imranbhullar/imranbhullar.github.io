@@ -168,7 +168,9 @@ sudo dmidecode -t 17
 sudo apt install nvme-cli
 
 # List NVMe devices
-sudo nvme list# Show SMART data
+sudo nvme list
+
+# Show SMART data
 sudo nvme smart-log /dev/nvme0
 
 # Show error log

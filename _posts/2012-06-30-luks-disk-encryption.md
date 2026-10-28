@@ -178,8 +178,8 @@ sudo cryptsetup luksFormat --header /boot/luks-header.img /dev/sdb1
 # Open with a detached header
 sudo cryptsetup luksOpen --header /boot/luks-header.img /dev/sdb1 data
 
-# Back up the header
-sudo cryptsetup luksHeaderBackup /dev/sdb1 --header-backup-file /root/luks-header.img
+# Back up the detached header
+sudo cp /boot/luks-header.img /root/luks-header.img.bak
 ```
 
 *Tip:* A detached header is a strong defence against offline attacks, because the attacker has no header to attack. It also means losing the header means losing the data, so back it up.

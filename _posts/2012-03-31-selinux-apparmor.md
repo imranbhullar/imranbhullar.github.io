@@ -71,7 +71,8 @@ sudo ausearch -m avc -ts recent
 # Human-readable explanation
 sudo ausearch -m avc -ts recent | audit2why
 
-# Generate a policy module from denialssudo ausearch -m avc -ts recent | audit2allow -M mypolicy
+# Generate a policy module from denials
+sudo ausearch -m avc -ts recent | audit2allow -M mypolicy
 sudo semodule -i mypolicy.pp
 ```
 

@@ -43,20 +43,24 @@ This shares the `/crackers` directory with all users from the `blackhats.com` do
 `/crackers *.blackhats.com(ro,sync) EXCEPT godfather.blackhats.com(rw,async)`
 This grants read-only access to all users from the `blackhats.com` domain, while `godfather.blackhats.com` has read-write access with async visibility.
 
+NFS also facilitates installations within UNIX environments, making it a versatile tool for network file management.
+
 ## Accessing NFS Shares
+
 To access network shares, you must mount them using the following command:
 
 `mount /source:/path@server /Destination`
+
 For example:
 
 `mount /192.168.0.1:/crackers /mnt/nfsshares`
+
 Whenever you create a new mount point, restart the NFS service. However, during file replication, avoid restarting the NFS service. Instead, use the following commands to update:
 
 `exportfs -ra `  # Updates NFS exports
 `exportfs -v `   # Displays current mounts
-It’s crucial that the root user sets appropriate permissions on these shares to allow user access.
 
-NFS also facilitates installations within UNIX environments, making it a versatile tool for network file management.
+It's crucial that the root user sets appropriate permissions on these shares to allow user access.
 
 ## NFSv4: The Modern Protocol
 

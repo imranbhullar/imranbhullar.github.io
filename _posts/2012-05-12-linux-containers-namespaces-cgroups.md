@@ -84,7 +84,7 @@ hostname
 
 ## Docker and Podman
 
-Docker and Podman are front-ends that do the namespace, cgroup, and filesystem setup for you.
+Docker and Podman are front-ends that do the namespace, cgroup, and filesystem setup for you. Docker uses a daemon (`dockerd`) and is rootful by default; Podman is daemonless and rootless by default.
 
 ```bash
 # Run a container
