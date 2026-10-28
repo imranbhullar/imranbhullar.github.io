@@ -234,6 +234,51 @@ sudo systemctl start backup.service
 
 *Tip:* `Persistent=true` makes the timer run immediately if the machine was off at the scheduled time, which is exactly what you want for backups on laptops and VMs.
 
+## Cron vs. systemd Timers
+
+Cron still works and is perfectly fine for simple jobs, but systemd timers offer better logging, dependency handling, and catch-up behaviour. The table below summarises the trade-offs.
+
+| Feature | Cron | systemd Timers |
+| :--- | :--- | :--- |
+| **Logging** | Mailed to the user, or redirected manually | Captured in the journal automatically |
+| **Missed runs** | Silently skipped | `Persistent=true` runs on next boot |
+| **Dependencies** | None | Full unit dependency graph |
+| **Randomised delay** | Not supported | `RandomizedDelaySec=` |
+| **Resource limits** | Not supported | `CPUQuota=`, `MemoryMax=`, etc. |
+| **Monitoring** | `crontab -l` | `systemctl list-timers` |
+| **Granularity** | 1 minute | 1 second |
+| **User jobs** | `crontab -e` | `systemctl --user` |
+
+### Equivalent Examples
+
+A cron entry that runs a backup every night at 2 a.m.:
+
+```cron
+0 2 * * * /usr/local/bin/backup.sh
+```
+
+The same job as a systemd timer:
+
+```ini
+# /etc/systemd/system/backup.timer
+[Unit]
+Description=Run the nightly backup
+
+[Timer]
+OnCalendar=*-*-* 02:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+```
+
+### When to Use Which
+
+* **Use cron** for simple, self-contained jobs on systems where you already have cron configured, or when you need per-user schedules without systemd user sessions.
+* **Use systemd timers** when you want logging, dependency ordering, resource limits, catch-up on missed runs, or when the job is part of a larger systemd-managed service.
+
+*Tip:* `systemctl list-timers --all` shows every timer, including inactive ones, along with the last and next run times. It is the fastest way to audit scheduled jobs on a systemd host.
+
 ## Overriding Vendor Units Without Editing Them
 
 Drop-in overrides let you change one directive without copying an entire unit file and inheriting its maintenance burden.

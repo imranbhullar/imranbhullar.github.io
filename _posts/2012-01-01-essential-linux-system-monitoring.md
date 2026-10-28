@@ -112,7 +112,7 @@ tail -f /var/log/app/app.log | grep --color=always "req_id=abc123"
 
 *Tip:* Pipe through `grep --line-buffered` when chaining filters, otherwise output can sit in the buffer and defeat the point of `tail -f`.
 
-On systemd hosts, `journalctl` replaces most of the file hunting and adds filtering by unit, priority, and time window.
+On systemd hosts, `journalctl` replaces most of the file hunting and adds filtering by unit, priority, and time window. The cheatsheet below covers the queries you will reach for most often.
 
 ```bash
 # Follow a specific service's logs
@@ -123,7 +123,45 @@ journalctl -p err -b
 
 # Everything from the last 15 minutes
 journalctl --since "15 min ago"
+
+# Logs between two timestamps
+journalctl --since "2026-01-01 00:00" --until "2026-01-01 12:00"
+
+# Logs for the previous boot
+journalctl -b -1
+
+# List all recorded boots
+journalctl --list-boots
+
+# Logs for a specific PID
+journalctl _PID=1234
+
+# Logs for a specific executable
+journalctl /usr/sbin/sshd
+
+# Kernel messages only
+journalctl -k
+
+# Filter by priority (0=emerg, 3=err, 4=warning, 6=info, 7=debug)
+journalctl -p warning
+
+# Show only the last 100 lines
+journalctl -n 100
+
+# Disk usage of the journal
+journalctl --disk-usage
+
+# Vacuum the journal to a size limit
+sudo journalctl --vacuum-size=500M
+
+# Output as JSON for parsing
+journalctl -u nginx -o json-pretty
+
+# Disable the pager when piping into grep or less
+journalctl -u nginx --no-pager | grep -i error
 ```
+
+*Tip:* `journalctl -p err -b` is the single most useful command when a service fails to start. It shows every error since the last boot, across all units, in one shot.
 
 ## Tracking System Performance Metrics in Real-Time with htop
 
