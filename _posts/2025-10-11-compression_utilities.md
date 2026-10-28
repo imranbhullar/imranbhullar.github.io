@@ -1,7 +1,7 @@
 ---
 layout: post
-title: "Linux Archiving & Compression: From Tar to Cpio"
-date: 2026-02-07
+title: "Linux Archiving & Compression: From Tar to Restic"
+date: 2025-10-11
 categories: [Linux, SysAdmin]
 tags: [LFCS, bash, archiving, backup, devops]
 ---

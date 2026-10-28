@@ -41,8 +41,9 @@ Want to make a quick copy of a config file before editing it? Use this shorthand
 
 ```bash
 cp important.conf{,.bak}
-This expands to cp important.conf important.conf.bak.
 ```
+
+This expands to `cp important.conf important.conf.bak`.
 ### 4. Find and Execute Actions
 Find all .tmp files and delete them in one go:
 ```bash

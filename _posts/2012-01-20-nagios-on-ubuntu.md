@@ -84,9 +84,10 @@ cd nagios-plugins-1.4.15
 ./configure --with-nagios-user=nagios --with-nagios-group=nagios
 make
 sudo make install
+```
+
 Start Nagios
 Verify the configuration and start the service:
-```
 
 ```bash
 sudo /usr/local/nagios/bin/nagios -v /usr/local/nagios/etc/nagios.cfg
