@@ -136,6 +136,61 @@ touch /tmp/test && setfattr -n user.test -v 1 /tmp/test && getfattr -d /tmp/test
 
 *Tip:* If `setfacl` succeeds but the user still cannot access the file, check the mask first. It is the single most common ACL problem.
 
+## Capabilities Deep Dive
+
+Capabilities split root's powers into discrete units, which lets a process have exactly the privileges it needs.
+
+```bash
+# Show capabilities on a binary
+getcap /usr/bin/ping
+
+# Give a binary the ability to bind to low ports
+sudo setcap cap_net_bind_service=+ep /usr/local/bin/myapp
+
+# Give a binary the ability to use raw sockets
+sudo setcap cap_net_raw=+ep /usr/local/bin/mytool
+
+# Remove capabilities
+sudo setcap -r /usr/local/bin/myapp
+
+# List all capabilities
+capsh --print
+```
+
+*Tip:* `cap_net_bind_service` is the standard replacement for running a web server as root just to bind port 80. It is far safer than `setuid root`.
+
+## security.capability xattr
+
+Capabilities are stored in the `security.capability` extended attribute, which is why they survive a copy only if you preserve xattrs.
+
+```bash
+# Show the raw xattr
+getfattr -m - -d /usr/local/bin/myapp
+
+# Copy a binary with its capabilities
+cp --preserve=all source dest
+
+# Archive with capabilities
+tar --xattrs --xattrs-include='*' -czvf archive.tar.gz /usr/local/bin/myapp
+```
+
+*Tip:* `cp --preserve=all` and `tar --xattrs` are the only reliable ways to preserve capabilities. A plain `cp` silently drops them.
+
+## filecap and netcap
+
+```bash
+# Install libcap-ng-utils
+sudo apt install libcap-ng-utils
+
+# List file capabilities
+sudo filecap -a
+
+# List network capabilities
+sudo netcap
+```
+
+*Tip:* `filecap -a` is the fastest way to audit which binaries have capabilities. It is the equivalent of `getcap -r /` but far faster.
+
 ## Quick Reference
 
 ```bash

@@ -113,6 +113,77 @@ openssl verify -CAfile /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/example
 
 *Tip:* `-showcerts` prints every certificate in the chain. Check the `notAfter` of each one, not just the leaf.
 
+## Generating a CSR
+
+```bash
+# Generate a private key and CSR in one step
+openssl req -new -newkey rsa:2048 -nodes \
+  -keyout example.key -out example.csr \
+  -subj "/C=US/ST=CA/L=SF/O=Example/CN=example.com"
+
+# Generate a CSR from an existing key
+openssl req -new -key example.key -out example.csr \
+  -subj "/CN=example.com"
+
+# Inspect a CSR
+openssl req -in example.csr -noout -text
+
+# Verify a CSR's signature
+openssl req -in example.csr -noout -verify
+```
+
+*Tip:* Always include a Subject Alternative Name (SAN) in the CSR. Modern browsers ignore the Common Name entirely, and a certificate without a SAN is rejected.
+
+## Self-Signed Certificates
+
+```bash
+# Generate a self-signed certificate valid for 365 days
+openssl req -x509 -newkey rsa:2048 -nodes \
+  -keyout example.key -out example.crt -days 365 \
+  -subj "/CN=example.com" \
+  -addext "subjectAltName=DNS:example.com,DNS:www.example.com"
+
+# Inspect the certificate
+openssl x509 -in example.crt -noout -text
+
+# Verify the certificate against itself
+openssl verify -CAfile example.crt example.crt
+```
+
+*Tip:* `-addext "subjectAltName=..."` is the correct way to add a SAN to a self-signed certificate. Without it, the certificate is rejected by every modern client.
+
+## Building a Chain
+
+```bash
+# Concatenate the leaf, intermediate, and root
+cat example.crt intermediate.crt root.crt > chain.pem
+
+# Verify the chain
+openssl verify -CAfile root.crt -untrusted intermediate.crt example.crt
+
+# Show the chain
+openssl crl2pkcs7 -nocrl -certfile chain.pem | openssl pkcs7 -print_certs -noout
+```
+
+*Tip:* The order matters: leaf first, then intermediates, then the root. A chain in the wrong order is rejected by most clients, and the error message rarely says so.
+
+## PKCS#12: Bundling Key and Certificate
+
+```bash
+# Create a PKCS#12 bundle
+openssl pkcs12 -export -out example.p12 \
+  -inkey example.key -in example.crt -certfile chain.pem
+
+# Inspect a PKCS#12 bundle
+openssl pkcs12 -in example.p12 -info -noout
+
+# Extract the key and certificate
+openssl pkcs12 -in example.p12 -nocerts -nodes -out example.key
+openssl pkcs12 -in example.p12 -clcerts -nokeys -out example.crt
+```
+
+*Tip:* PKCS#12 is the standard format for importing a certificate into a Java keystore, a Windows store, or a browser. It bundles the key, the certificate, and the chain in one file.
+
 ## Quick Reference
 
 ```bash

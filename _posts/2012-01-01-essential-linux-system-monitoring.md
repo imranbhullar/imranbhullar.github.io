@@ -207,6 +207,55 @@ disown %1        # detach job 1 so it survives logout
 
 *Tip:* For anything you actually care about surviving a dropped SSH session, use `tmux` or `nohup`. `disown` helps, but a multiplexer is the real answer.
 
+## Modern Monitoring Tools: btop, glances, atop, nmon, and dstat
+
+`htop` is the classic interactive monitor, but the modern alternatives each have a niche.
+
+```bash
+# btop: modern, fast, with graphs
+sudo apt install btop
+btop
+
+# glances: cross-platform, with a web UI
+sudo apt install glances
+glances
+glances -w    # web UI on port 61208
+
+# atop: full system snapshot with per-process detail
+sudo apt install atop
+sudo atop
+
+# nmon: interactive monitor with per-CPU and per-disk graphs
+sudo apt install nmon
+nmon
+
+# dstat: combined vmstat + iostat + netstat
+sudo apt install dstat
+dstat -tcmnd
+```
+
+*Tip:* `atop` is the only one of these that records historical data by default, which makes it invaluable when you need to know what happened before you were paged.
+
+## Pressure Stall Information (PSI)
+
+PSI measures how much time tasks are stalled waiting for CPU, memory, or I/O. It is the most accurate signal of real resource pressure.
+
+```bash
+# Memory pressure
+cat /proc/pressure/memory
+
+# CPU pressure
+cat /proc/pressure/cpu
+
+# I/O pressure
+cat /proc/pressure/io
+
+# Watch all three live
+watch -n 1 'cat /proc/pressure/{cpu,memory,io}'
+```
+
+*Tip:* A `full` value above zero means at least one task was stalled. It is a far better signal than load average, which counts uninterruptible sleep as load.
+
 ## Added Bonus Command: Checking Available System Memory Instantly with free -h
 
 `free -h` is the fastest way to answer "do we have memory pressure?" without opening a monitoring tool. It gives you human-readable totals for RAM and swap, and the `available` column is the one that matters. The `free` column is misleading on Linux because of caching.

@@ -163,6 +163,83 @@ sudo grep -E "useradd|usermod|userdel" /var/log/auth.log
 
 *Tip:* The UID 0 check is a standard hardening step. Any account other than `root` with UID 0 is a backdoor, whether intentional or not.
 
+## PAM Deep Dive
+
+PAM stacks are more flexible than the four types suggest. These are the patterns you will use most often.
+
+```bash
+# /etc/pam.d/sshd
+
+# Require a TOTP token
+auth required pam_google_authenticator.so
+
+# Run a script on login
+session optional pam_exec.so /usr/local/bin/on-login.sh
+
+# Restrict login by group
+account required pam_access.so
+
+# Enforce password quality
+password requisite pam_pwquality.so retry=3 minlen=12
+```
+
+*Tip:* `pam_exec.so` is the cleanest way to run a script on login or logout. It is how most "notify on login" and "audit session" workflows are implemented.
+
+## sssd: Centralised Identity
+
+`sssd` connects a host to LDAP, Kerberos, or Active Directory, and caches the results.
+
+```bash
+# Install
+sudo apt install sssd sssd-tools
+
+# Configure
+# /etc/sssd/sssd.conf
+# [sssd]
+# services = nss, pam
+# domains = example.com
+#
+# [domain/example.com]
+# id_provider = ldap
+# auth_provider = ldap
+# ldap_uri = ldap://ldap.example.com
+# ldap_search_base = dc=example,dc=com
+
+# Restart
+sudo systemctl restart sssd
+
+# Clear the cache
+sudo sss_cache -E
+
+# Check the cache
+sudo sssctl user-checks alice
+```
+
+*Tip:* `sss_cache -E` is the fastest way to force a refresh after a change in the directory. Without it, the host keeps serving stale data.
+
+## systemd-homed and userdbctl
+
+`systemd-homed` manages home directories as portable, encrypted images, and `userdbctl` queries the user database.
+
+```bash
+# Create a homed user
+sudo homectl create alice --storage=luks
+
+# List homed users
+homectl list
+
+# Activate a home directory
+sudo homectl activate alice
+
+# Query the user database
+userdbctl user alice
+
+# List all users
+userdbctl user
+```
+
+*Tip:* `userdbctl` is the modern replacement for `getent passwd`. It queries every configured user source, including `systemd-homed` and `sssd`.
+
 ## Quick Reference
 
 ```bash

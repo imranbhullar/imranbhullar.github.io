@@ -137,6 +137,69 @@ sysctl net.core.somaxconn
 
 *Tip:* Files in `/etc/sysctl.d/` are applied in lexical order. Name your file `99-` something so it wins over distribution defaults.
 
+## sysctl Deep Dive
+
+```bash
+# Show all parameters
+sysctl -a
+
+# Show a subtree
+sysctl net.ipv4
+
+# Show a parameter with its description
+sysctl -d net.ipv4.ip_forward
+
+# Write a parameter
+sudo sysctl -w net.ipv4.ip_forward=1
+
+# Apply all files in /etc/sysctl.d/
+sudo sysctl --system
+
+# Apply a single file
+sudo sysctl -p /etc/sysctl.d/99-tuning.conf
+```
+
+*Tip:* `sysctl -d` shows the kernel's own description of a parameter, which is often more accurate than the documentation.
+
+## kernel.sysrq: Magic SysRq
+
+```bash
+# Enable all SysRq functions
+echo 1 | sudo tee /proc/sys/kernel/sysrq
+
+# Sync and reboot safely
+echo b | sudo tee /proc/sysrq-trigger
+
+# Sync only
+echo s | sudo tee /proc/sysrq-trigger
+
+# Remount read-only
+echo u | sudo tee /proc/sysrq-trigger
+
+# Show memory info
+echo m | sudo tee /proc/sysrq-trigger
+```
+
+*Tip:* `Alt+SysRq+REISUB` is the safe reboot sequence. It syncs, remounts read-only, and reboots, which avoids filesystem corruption on a hung system.
+
+## kernel.panic and kernel.core_pattern
+
+```bash
+# Reboot 10 seconds after a panic
+echo 10 | sudo tee /proc/sys/kernel/panic
+
+# Reboot on oops
+echo 1 | sudo tee /proc/sys/kernel/panic_on_oops
+
+# Send cores to systemd-coredump
+echo '|/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h' | sudo tee /proc/sys/kernel/core_pattern
+
+# Write cores to a file
+echo '/var/crash/core.%e.%p' | sudo tee /proc/sys/kernel/core_pattern
+```
+
+*Tip:* `kernel.panic=10` is the standard setting on servers. Without it, a panicked host sits idle until someone notices, which can be hours.
+
 ## Quick Reference
 
 ```bash

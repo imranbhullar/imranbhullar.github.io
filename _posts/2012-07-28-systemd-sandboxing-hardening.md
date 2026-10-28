@@ -177,6 +177,51 @@ WantedBy=multi-user.target
 
 *Tip:* Apply directives one at a time and test after each. A single over-restrictive directive can break a service in a way that is hard to diagnose.
 
+## systemd-analyze security Deep Dive
+
+```bash
+# Score a unit from 0 (bad) to 10 (good)
+systemd-analyze security myapp
+
+# Show the full list of directives and their status
+systemd-analyze security myapp --no-pager
+
+# Score every running service
+systemd-analyze security --recursive
+
+# Show only the directives that are not set
+systemd-analyze security myapp --no-pager | grep -v "✓"
+```
+
+*Tip:* `systemd-analyze security` lists every directive you have not set, which makes it the fastest way to find the next hardening step.
+
+## SystemCallLog and SystemCallArchitectures
+
+```ini
+# Log denied system calls instead of silently blocking them
+SystemCallLog=~@mount @debug
+
+# Restrict to a single architecture
+SystemCallArchitectures=native
+
+# Restrict to a specific set of architectures
+SystemCallArchitectures=native x86-64
+```
+
+*Tip:* `SystemCallLog=` is the correct way to debug a `SystemCallFilter=` that is too restrictive. It logs the denied calls without changing the behaviour.
+
+## RestrictFileSystems
+
+```ini
+# Restrict the service to specific filesystem types
+RestrictFileSystems=ext4 xfs btrfs
+
+# Restrict to a specific set
+RestrictFileSystems=@basic-api
+```
+
+*Tip:* `RestrictFileSystems=` is a newer directive that blocks the service from mounting or accessing filesystems outside the allowed set. It is a strong defence against container escapes.
+
 ## Quick Reference
 
 ```bash

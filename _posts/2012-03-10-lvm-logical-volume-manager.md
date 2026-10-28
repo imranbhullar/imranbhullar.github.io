@@ -155,6 +155,58 @@ sudo pvremove /dev/sdb
 
 *Tip:* `pvmove` can take hours on large volumes. Run it in `tmux` so a dropped SSH session does not interrupt it.
 
+## Thin Provisioning
+
+Thin pools let you over-provision storage: you create logical volumes larger than the physical space, and space is allocated on write.
+
+```bash
+# Create a thin pool
+sudo lvcreate --type thin-pool -L 100G -n pool data_vg
+
+# Create a thin volume from the pool
+sudo lvcreate --type thin -V 500G -n thin_lv --thinpool pool data_vg
+
+# Show thin pool usage
+sudo lvs -o+segtype,data_percent,metadata_percent
+
+# Extend the thin pool
+sudo lvextend -L +50G data_vg/pool
+```
+
+*Tip:* Thin pools need monitoring. If the pool fills up, every thin volume on it becomes read-only, and recovery requires extending the pool or deleting data. Set an alert at 80% usage.
+
+## LVM Cache
+
+LVM cache uses a fast device (SSD or NVMe) as a cache for a slow device (HDD), which is a cheap way to accelerate read-heavy workloads.
+
+```bash
+# Create a cache pool
+sudo lvcreate --type cache-pool -L 20G -n cachepool data_vg /dev/nvme0n1
+
+# Attach the cache to an existing LV
+sudo lvconvert --type cache --cachepool data_vg/cachepool data_vg/data_lv
+
+# Show cache statistics
+sudo lvs -o+cache_total_blocks,cache_used_blocks,cache_dirty_blocks
+
+# Detach the cache
+sudo lvconvert --uncache data_vg/data_lv
+```
+
+*Tip:* LVM cache is a good fit for read-heavy workloads and a poor fit for write-heavy ones. A cache device failure can lose data, so use a mirrored cache pool for anything important.
+
+## lvconvert --type thin: Converting an Existing LV
+
+```bash
+# Convert a linear LV to a thin volume
+sudo lvconvert --type thin --thinpool data_vg/pool data_vg/data_lv
+
+# Convert a thin volume back to linear
+sudo lvconvert --type linear data_vg/thin_lv
+```
+
+*Tip:* Converting to thin is online and non-disruptive. Converting back to linear requires the thin volume to be fully allocated, which is rarely the case.
+
 ## Quick Reference
 
 ```bash

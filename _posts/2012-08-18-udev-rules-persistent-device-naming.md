@@ -103,6 +103,74 @@ SUBSYSTEM=="usb", ATTR{idVendor}=="1234", ATTR{idProduct}=="5678", ACTION=="add"
 
 *Tip:* `ATTRS{}` (plural) matches the parent device, while `ATTR{}` matches the device itself. For USB serial adapters, you almost always want `ATTRS{}`.
 
+## udevadm test-builtin: Testing Built-in Commands
+
+`udevadm test-builtin` runs a single built-in command against a device, which is the fastest way to debug a rule that uses one.
+
+```bash
+# Test the net_id built-in
+sudo udevadm test-builtin net_id /sys/class/net/eth0
+
+# Test the path_id built-in
+sudo udevadm test-builtin path_id /sys/class/block/sdb
+
+# Test the usb_id built-in
+sudo udevadm test-builtin usb_id /sys/bus/usb/devices/1-1
+```
+
+*Tip:* `udevadm test-builtin` shows exactly what a built-in command produces, which is invaluable when a rule depends on its output.
+
+## udevadm trigger --action
+
+```bash
+# Trigger only add events
+sudo udevadm trigger --action=add
+
+# Trigger only change events
+sudo udevadm trigger --action=change
+
+# Trigger for a specific subsystem
+sudo udevadm trigger --subsystem-match=block
+
+# Trigger for a specific device
+sudo udevadm trigger --sysname-match=sdb
+```
+
+*Tip:* `udevadm trigger --action=change` is the correct way to re-apply rules to existing devices without a reboot.
+
+## udevadm settle: Waiting for Events
+
+```bash
+# Wait for all pending udev events to finish
+sudo udevadm settle
+
+# Wait with a timeout
+sudo udevadm settle --timeout=30
+
+# Show the current event queue
+sudo udevadm settle --seq-start=0 --seq-end=0
+```
+
+*Tip:* `udevadm settle` is essential in scripts that create devices and then immediately use them. Without it, the device may not exist yet when the script tries to access it.
+
+## systemd-udevd: The Daemon
+
+```bash
+# Is it running?
+systemctl status systemd-udevd
+
+# Show the daemon's configuration
+udevadm info --version
+
+# Reload the rules
+sudo udevadm control --reload-rules
+
+# Set the log level
+sudo udevadm control --log-priority=debug
+```
+
+*Tip:* `udevadm control --log-priority=debug` is the fastest way to see why a rule is not firing. Set it back to `info` when you are done.
+
 ## Quick Reference
 
 ```bash

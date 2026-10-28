@@ -99,6 +99,103 @@ sysctl vm.swappiness
 
 *Tip:* Setting `oom_score_adj` to `-1000` makes a process effectively immune to the OOM killer. Use it sparingly, and only for processes whose loss would be worse than the OOM event itself.
 
+## smem: Accurate Memory Accounting
+
+RSS counts shared pages once per process, which overstates real usage. `smem` reports PSS (proportional set size), which divides shared pages among the processes that use them.
+
+```bash
+# Install
+sudo apt install smem
+
+# Per-process PSS
+smem -t -p
+
+# Per-user summary
+smem -t -u
+
+# Sort by PSS
+smem -t -k -c "pid user command pss" | sort -k4 -n
+```
+
+*Tip:* When you need to know how much memory a set of processes *actually* uses, `smem` is the correct tool. RSS is fine for a rough ranking, but it double-counts shared libraries.
+
+## Pressure Stall Information (PSI)
+
+PSI measures how much time tasks are stalled waiting for CPU, memory, or I/O. It is the most accurate signal of real resource pressure.
+
+```bash
+# Memory pressure
+cat /proc/pressure/memory
+
+# CPU pressure
+cat /proc/pressure/cpu
+
+# I/O pressure
+cat /proc/pressure/io
+
+# Watch memory pressure live
+watch -n 1 cat /proc/pressure/memory
+```
+
+*Tip:* A `full` value above zero in `/proc/pressure/memory` means at least one task was stalled on memory. It is a far better signal than `free` or swap usage.
+
+## cgroup v2 Memory Limits
+
+On cgroup v2, memory limits are enforced per cgroup, which is how systemd and containers cap memory.
+
+```bash
+# Show the memory limit for a service
+cat /sys/fs/cgroup/system.slice/myapp.service/memory.max
+
+# Show current usage
+cat /sys/fs/cgroup/system.slice/myapp.service/memory.current
+
+# Show the peak usage
+cat /sys/fs/cgroup/system.slice/myapp.service/memory.peak
+
+# Show memory events (OOM kills, high watermarks)
+cat /sys/fs/cgroup/system.slice/myapp.service/memory.events
+```
+
+*Tip:* `memory.events` shows `oom_kill` and `high` counters. A non-zero `oom_kill` confirms the cgroup, not the kernel, killed the process.
+
+## systemd-oomd
+
+`systemd-oomd` kills cgroups under memory pressure before the kernel OOM killer has to act.
+
+```bash
+# Is it running?
+systemctl status systemd-oomd
+
+# Show the current pressure
+systemd-oomdctl
+
+# Check the configured thresholds
+cat /etc/systemd/oomd.conf
+```
+
+*Tip:* `systemd-oomd` acts on cgroup-level pressure, which is far more targeted than the kernel OOM killer. It is enabled by default on Fedora and many desktop distributions.
+
+## numastat: NUMA Memory Distribution
+
+On multi-socket systems, memory access is not uniform. `numastat` shows how memory is distributed across NUMA nodes.
+
+```bash
+# Install
+sudo apt install numactl
+
+# Show NUMA topology
+numactl --hardware
+
+# Show per-node memory statistics
+numastat
+
+# Show per-process NUMA memory
+numastat -p 1234
+```
+
+*Tip:* A process with most of its memory on a remote NUMA node will be slow even when the system has plenty of free RAM. `numastat -p` shows the distribution per process.
+
 ## Quick Reference
 
 ```bash

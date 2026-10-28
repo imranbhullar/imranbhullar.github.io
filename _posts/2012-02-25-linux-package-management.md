@@ -173,6 +173,82 @@ cat /etc/pacman.conf
 
 *Tip:* On modern Debian and Ubuntu, prefer files under `/etc/apt/sources.list.d/` over editing `/etc/apt/sources.list` directly. It makes third-party repos easy to add and remove.
 
+## apt Pinning Deep Dive
+
+Pinning lets you control which repository a package comes from, which is essential when mixing stable and backports.
+
+```bash
+# /etc/apt/preferences.d/99-pinning
+Package: *
+Pin: release a=stable
+Pin-Priority: 900
+
+Package: *
+Pin: release a=backports
+Pin-Priority: 100
+
+# Show the effective priority for a package
+apt-cache policy nginx
+
+# Install from a specific release
+sudo apt install -t backports nginx
+```
+
+*Tip:* `apt-cache policy` shows the candidate version and the priority of each source. It is the fastest way to understand why a package is not upgrading.
+
+## dnf module: Streams and Profiles
+
+```bash
+# List modules
+dnf module list
+
+# Enable a stream
+sudo dnf module enable nodejs:20
+
+# Install a profile
+sudo dnf module install nodejs:20/development
+
+# Reset a module
+sudo dnf module reset nodejs
+```
+
+*Tip:* Module streams are how RHEL ships multiple versions of the same package. `dnf module list` shows which streams are available and which is enabled.
+
+## zypper Patterns
+
+```bash
+# List patterns
+zypper patterns
+
+# Install a pattern
+sudo zypper install -t pattern lamp_server
+
+# Search patterns
+zypper search -t pattern
+```
+
+*Tip:* Patterns are SUSE's way of grouping packages for a role. They are the equivalent of a meta-package on Debian.
+
+## pacman AUR
+
+```bash
+# Install an AUR helper
+sudo pacman -S --needed base-devel git
+git clone https://aur.archlinux.org/yay.git
+cd yay && makepkg -si
+
+# Install from the AUR
+yay -S google-chrome
+
+# Search the AUR
+yay -Ss chrome
+
+# Update everything, including AUR
+yay -Syu
+```
+
+*Tip:* The AUR is user-maintained and unvetted. Read the `PKGBUILD` before installing anything from it, because it runs arbitrary code as your user.
+
 ## Quick Reference
 
 | Task | Debian | RHEL | SUSE | Arch |

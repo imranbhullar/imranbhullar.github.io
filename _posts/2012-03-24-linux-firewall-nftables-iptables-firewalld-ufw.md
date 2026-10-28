@@ -144,6 +144,62 @@ sudo dmesg -w | grep -i drop
 
 *Tip:* Logging every drop is noisy. Add a temporary log rule, reproduce the problem, then remove it. Permanent drop logging will flood your disk.
 
+## nftables Sets, Maps, and Flowtables
+
+nftables has features that iptables lacks: sets, maps, and flowtables.
+
+```bash
+# Create a set of allowed IPs
+sudo nft add set inet filter allowed_ips '{ type ipv4_addr; }'
+sudo nft add element inet filter allowed_ips '{ 10.0.0.1, 10.0.0.2 }'
+sudo nft add rule inet filter input ip saddr @allowed_ips accept
+
+# Create a map: port to backend
+sudo nft add map inet filter port_map '{ type inet_service : ipv4_addr; }'
+sudo nft add element inet filter port_map '{ 80 : 10.0.0.10, 443 : 10.0.0.11 }'
+
+# Create a flowtable for fast-path forwarding
+sudo nft add flowtable inet filter f '{ hook ingress priority 0; devices = { eth0, eth1 }; }'
+sudo nft add rule inet filter forward ip protocol { tcp, udp } flow add @f
+```
+
+*Tip:* Flowtables are the single biggest performance win in nftables. They bypass the normal rule evaluation for established flows, which is how nftables handles high-throughput forwarding.
+
+## Migrating from iptables to nftables
+
+```bash
+# Translate an iptables ruleset to nftables
+iptables-save | iptables-restore-translate -f /etc/nftables.conf
+
+# Translate a single rule
+iptables-translate -A INPUT -p tcp --dport 22 -j ACCEPT
+
+# Translate an ip6tables rule
+ip6tables-translate -A INPUT -p tcp --dport 22 -j ACCEPT
+```
+
+*Tip:* `iptables-translate` is the fastest way to convert a single rule. It produces the exact nftables equivalent, which is far less error-prone than translating by hand.
+
+## firewalld Rich Rules
+
+Rich rules are firewalld's way of expressing complex conditions that the simple `--add-service` and `--add-port` cannot.
+
+```bash
+# Allow a specific source to a specific service
+sudo firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="10.0.0.0/24" service name="ssh" accept'
+
+# Rate-limit SSH
+sudo firewall-cmd --permanent --add-rich-rule='rule service name="ssh" limit value="10/m" accept'
+
+# Log and drop
+sudo firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="10.0.0.0/24" log prefix="blocked: " level="info" drop'
+
+# Reload
+sudo firewall-cmd --reload
+```
+
+*Tip:* Rich rules are evaluated before the zone's normal rules, which makes them the right tool for exceptions. They are also the only way to rate-limit in firewalld.
+
 ## Quick Reference
 
 | Task | nftables | iptables | firewalld | ufw |

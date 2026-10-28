@@ -129,6 +129,79 @@ sudo aa-logprof
 
 *Tip:* `aa-logprof` reads the denial log and walks you through adding the missing rules. It is the fastest way to fix a profile without hand-editing it.
 
+## Custom SELinux Policy Modules
+
+When a boolean does not exist for your use case, you can write a custom policy module.
+
+```bash
+# Generate a policy skeleton from a running process
+sudo sepolicy generate --init /usr/local/bin/myapp
+
+# Build the module
+cd myapp && sudo ./myapp.sh
+
+# Install the module
+sudo semodule -i myapp.pp
+
+# List installed modules
+sudo semodule -l
+
+# Remove a module
+sudo semodule -r myapp
+```
+
+*Tip:* `sepolicy generate` produces a complete policy skeleton, including file contexts and a systemd unit. It is the fastest way to start a custom policy.
+
+## audit2allow: Generating Policy from Denials
+
+```bash
+# Generate a policy module from recent denials
+sudo ausearch -m avc -ts recent | audit2allow -M mypolicy
+
+# Install it
+sudo semodule -i mypolicy.pp
+
+# Explain the denial in plain English
+sudo ausearch -m avc -ts recent | audit2why
+```
+
+*Tip:* `audit2allow` is a starting point, not a solution. Review the generated policy before installing it, because it allows exactly what was denied, which may be more than you intended.
+
+## AppArmor Profile Authoring
+
+AppArmor profiles are plain text files under `/etc/apparmor.d/`.
+
+```bash
+# Generate a profile from a running process
+sudo aa-genprof /usr/local/bin/myapp
+
+# Update a profile interactively from the denial log
+sudo aa-logprof
+
+# Reload a profile
+sudo apparmor_parser -r /etc/apparmor.d/usr.local.bin.myapp
+
+# Put a profile in complain mode
+sudo aa-complain /etc/apparmor.d/usr.local.bin.myapp
+```
+
+```text
+# /etc/apparmor.d/usr.local.bin.myapp
+#include <tunables/global>
+
+/usr/local/bin/myapp {
+  #include <abstractions/base>
+
+  /etc/myapp/** r,
+  /var/lib/myapp/** rw,
+  /var/log/myapp/** w,
+
+  deny /etc/shadow r,
+}
+```
+
+*Tip:* `aa-logprof` is the fastest way to build a profile. Run the application in complain mode, exercise every code path, then run `aa-logprof` to convert the denials into rules.
+
 ## Quick Reference
 
 ```bash

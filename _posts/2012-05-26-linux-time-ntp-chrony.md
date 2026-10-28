@@ -123,6 +123,56 @@ chronyc tracking
 
 *Tip:* Containers do not have their own clock. If a container reports the wrong time, the host is wrong, and fixing the host fixes every container on it.
 
+## systemd-timesyncd
+
+`systemd-timesyncd` is a minimal SNTP client that is enabled by default on many distributions.
+
+```bash
+# Is it running?
+systemctl status systemd-timesyncd
+
+# Show the current sync status
+timedatectl timesync-status
+
+# Show the configured servers
+cat /etc/systemd/timesyncd.conf
+
+# Force a resync
+sudo systemctl restart systemd-timesyncd
+```
+
+*Tip:* `timedatectl timesync-status` shows the offset, the delay, and the server in use. It is the fastest way to confirm whether the clock is actually synchronised.
+
+## Migrating from ntpd to chrony
+
+```bash
+# Stop and disable ntpd
+sudo systemctl disable --now ntpd
+
+# Install chrony
+sudo apt install chrony
+
+# Enable and start
+sudo systemctl enable --now chronyd
+
+# Verify
+chronyc tracking
+```
+
+*Tip:* chrony and ntpd cannot run at the same time. Disable one before enabling the other, or both will fight over the clock.
+
+## chronyc ntpdata: Per-Source Detail
+
+```bash
+# Show detailed data for each source
+chronyc ntpdata
+
+# Show data for a specific source
+chronyc ntpdata 0.pool.ntp.org
+```
+
+*Tip:* `chronyc ntpdata` shows the round-trip delay, the offset, and the stratum for each source. It is the fastest way to identify a bad NTP server.
+
 ## Quick Reference
 
 ```bash

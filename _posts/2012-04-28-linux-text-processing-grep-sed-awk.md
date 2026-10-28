@@ -167,6 +167,103 @@ grep -rl "old_value" . | xargs sed -i 's/old_value/new_value/g'
 
 *Tip:* The last one is the pattern you will use most often: `grep -rl` to find the files, `xargs sed -i` to change them. It is faster and safer than a `for` loop.
 
+## awk Deep Dive
+
+`awk` is a full programming language. These are the patterns that go beyond simple column extraction.
+
+```bash
+# BEGIN and END blocks
+awk 'BEGIN {print "start"} {print} END {print "end"}' file.txt
+
+# Multiple conditions
+awk '$3 > 100 && $4 == "active" {print $1}' file.txt
+
+# Regular expression match
+awk '/error/ {print $0}' app.log
+
+# Field separator as a regex
+awk -F'[,;]' '{print $2}' file.txt
+
+# Output field separator
+awk -F: 'BEGIN {OFS=","} {print $1, $7}' /etc/passwd
+
+# Multi-line records
+awk 'BEGIN {RS=""; FS="\n"} {print $1}' file.txt
+
+# Arrays and grouping
+awk '{count[$1]++} END {for (k in count) print k, count[k]}' file.txt
+
+# Sort within awk
+awk '{print $2, $1}' file.txt | sort -n
+```
+
+*Tip:* `awk` is almost always shorter and faster than a bash loop for column processing. If you find yourself writing a `while read` loop to process fields, reach for `awk` instead.
+
+## sed Hold Space
+
+`sed` has two buffers: the pattern space (the current line) and the hold space (a scratch buffer). The hold space lets you do multi-line operations.
+
+```bash
+# Reverse the order of lines in a file
+sed -n '1!G;h;$p' file.txt
+
+# Join pairs of lines
+sed 'N;s/\n/ /' file.txt
+
+# Delete the last line
+sed '$d' file.txt
+
+# Print the line before a match
+sed -n '/error/{x;p;d};x' app.log
+
+# Replace across multiple lines
+sed ':a;N;$!ba;s/foo\nbar/baz/g' file.txt
+```
+
+*Tip:* The hold space is the most powerful and least understood part of `sed`. The `1!G;h;$p` idiom for reversing a file is worth memorising.
+
+## grep -P: Perl-Compatible Regex
+
+```bash
+# Lookahead
+grep -P 'foo(?=bar)' file.txt
+
+# Lookbehind
+grep -P '(?<=foo)bar' file.txt
+
+# Non-greedy match
+grep -P 'foo.*?bar' file.txt
+
+# Named groups
+grep -P '(?<name>\w+)' file.txt
+```
+
+*Tip:* `grep -P` is not available on every platform (notably macOS). If you need portability, use `grep -E` or `awk`.
+
+## jq and yq: Structured Data
+
+```bash
+# Pretty-print JSON
+jq . file.json
+
+# Extract a field
+jq -r '.name' file.json
+
+# Filter an array
+jq -r '.[] | select(.status == "active") | .name' file.json
+
+# Modify and output
+jq '.name = "new"' file.json
+
+# YAML: read a value
+yq '.spec.replicas' deployment.yaml
+
+# YAML: modify a value
+yq -i '.spec.replicas = 3' deployment.yaml
+```
+
+*Tip:* `jq` and `yq` are the correct tools for structured data. Do not parse JSON with `grep` and `sed`; it works until it does not.
+
 ## Quick Reference
 
 ```bash

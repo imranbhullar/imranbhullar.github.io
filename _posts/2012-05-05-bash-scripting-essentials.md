@@ -177,6 +177,79 @@ command | tee -a run.log
 
 *Tip:* Send logs to stderr and data to stdout. It lets callers pipe your script's output without mixing in log lines.
 
+## Arrays
+
+```bash
+# Indexed array
+users=(alice bob carol)
+echo "${users[0]}"
+echo "${users[@]}"
+echo "${#users[@]}"
+
+# Append
+users+=(dave)
+
+# Iterate
+for u in "${users[@]}"; do
+  echo "${u}"
+done
+
+# Associative array (bash 4+)
+declare -A ports
+ports[http]=80
+ports[https]=443
+for k in "${!ports[@]}"; do
+  echo "${k}=${ports[$k]}"
+done
+```
+
+*Tip:* Always quote `"${array[@]}"`. Unquoted, it splits on whitespace and expands globs, which is the same bug as unquoted variables.
+
+## getopts: Proper Option Parsing
+
+```bash
+while getopts ":f:v" opt; do
+  case "${opt}" in
+    f) file="${OPTARG}" ;;
+    v) verbose=1 ;;
+    \?) echo "invalid option: -${OPTARG}" >&2; exit 1 ;;
+    :) echo "option -${OPTARG} requires an argument" >&2; exit 1 ;;
+  esac
+done
+shift $((OPTIND - 1))
+```
+
+*Tip:* `getopts` handles short options only. For long options, use `getopt` (the external command) or a dedicated parser.
+
+## trap ERR and set -E
+
+```bash
+set -Eeuo pipefail
+
+trap 'echo "error on line ${LINENO}: ${BASH_COMMAND}" >&2' ERR
+
+trap 'echo "interrupted" >&2; exit 130' INT TERM
+```
+
+*Tip:* `set -E` makes the `ERR` trap inherited by functions and subshells. Without it, an error inside a function does not trigger the trap.
+
+## BASH_REMATCH and printf -v
+
+```bash
+# Capture groups with BASH_REMATCH
+if [[ "v1.2.3" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+  major="${BASH_REMATCH[1]}"
+  minor="${BASH_REMATCH[2]}"
+  patch="${BASH_REMATCH[3]}"
+fi
+
+# Assign to a variable without a subshell
+printf -v today '%(%Y-%m-%d)T' -1
+echo "${today}"
+```
+
+*Tip:* `printf -v` is faster than `var=$(command)` because it avoids a subshell. It is the correct way to format dates and numbers in a loop.
+
 ## Quick Reference
 
 ```bash

@@ -131,6 +131,102 @@ sudo fwupdmgr update
 
 *Tip:* `fwupdmgr` is the standard way to update firmware on supported hardware. It is far safer than vendor-specific tools and works across most modern servers and laptops.
 
+## dmidecode Deep Dive
+
+```bash
+# All DMI types
+sudo dmidecode -t all
+
+# BIOS
+sudo dmidecode -t bios
+
+# System
+sudo dmidecode -t system
+
+# Baseboard
+sudo dmidecode -t baseboard
+
+# Chassis
+sudo dmidecode -t chassis
+
+# Processor
+sudo dmidecode -t processor
+
+# Memory
+sudo dmidecode -t memory
+
+# Memory devices only
+sudo dmidecode -t 17
+```
+
+*Tip:* `dmidecode -t 17` shows the physical DIMMs, their speed, and which slots are populated. It is the only way to know whether you can add RAM without opening the case.
+
+## nvme-cli: NVMe Health and Management
+
+```bash
+# Install
+sudo apt install nvme-cli
+
+# List NVMe devices
+sudo nvme list# Show SMART data
+sudo nvme smart-log /dev/nvme0
+
+# Show error log
+sudo nvme error-log /dev/nvme0
+
+# Show firmware slot information
+sudo nvme fw-log /dev/nvme0
+
+# Run a self-test
+sudo nvme self-test /dev/nvme0
+```
+
+*Tip:* `nvme smart-log` shows the wear level, the temperature, and the media errors. It is the NVMe equivalent of `smartctl -A`, and it is the only way to see NVMe-specific health data.
+
+## ipmitool: Out-of-Band Management
+
+```bash
+# Install
+sudo apt install ipmitool
+
+# Show the BMC information
+sudo ipmitool mc info
+
+# Show the sensor list
+sudo ipmitool sensor list
+
+# Show the chassis status
+sudo ipmitool chassis status
+
+# Show the event log
+sudo ipmitool sel list
+
+# Power cycle the host
+sudo ipmitool chassis power cycle
+```
+
+*Tip:* `ipmitool sel list` shows the hardware event log, which is the only record of a hardware failure that happened before the OS booted.
+
+## Redfish: The Modern BMC API
+
+```bash
+# Query the Redfish root
+curl -sk https://bmc.example.com/redfish/v1/ | jq .
+
+# Show the system inventory
+curl -sk https://bmc.example.com/redfish/v1/Systems/1 | jq .
+
+# Show the thermal data
+curl -sk https://bmc.example.com/redfish/v1/Chassis/1/Thermal | jq .
+
+# Power cycle
+curl -sk -X POST -H 'Content-Type: application/json' \
+  -d '{"ResetType":"ForceRestart"}' \
+  https://bmc.example.com/redfish/v1/Systems/1/Actions/ComputerSystem.Reset
+```
+
+*Tip:* Redfish is the modern replacement for IPMI. It is a REST API, which makes it far easier to automate than the binary IPMI protocol.
+
 ## Quick Reference
 
 ```bash

@@ -269,6 +269,94 @@ sudo ip link set br0 up
 
 *Tip:* These commands are not persistent. On RHEL family systems, use `nmcli` or `ifcfg` files; on Debian family, use `/etc/network/interfaces` or `netplan`. The `ip` commands are for testing and for understanding what the config files produce.
 
+## Policy Routing with `ip rule`
+
+The main routing table is only one of 256 tables. Policy routing lets you send traffic to different tables based on source address, mark, or interface.
+
+```bash
+# List the routing policy rules
+ip rule show
+
+# Add a rule: traffic from 10.0.0.0/24 uses table 100
+sudo ip rule add from 10.0.0.0/24 table 100
+
+# Add a route to table 100
+sudo ip route add default via 10.0.0.1 table 100
+
+# Delete a rule
+sudo ip rule del from 10.0.0.0/24 table 100
+
+# Show a specific table
+ip route show table 100
+```
+
+*Tip:* Policy routing is how you run multiple uplinks or route VPN traffic selectively. `ip rule show` is the first command to run when traffic takes an unexpected path.
+
+## VRFs: Virtual Routing and Forwarding
+
+A VRF is a separate routing table attached to a set of interfaces, which is how you isolate routing domains on a single host.
+
+```bash
+# Create a VRF
+sudo ip link add vrf-blue type vrf table 100
+sudo ip link set vrf-blue up
+
+# Attach an interface to the VRF
+sudo ip link set eth1 master vrf-blue
+
+# Show the VRF's routing table
+ip route show table 100
+
+# Show VRF membership
+ip -d link show type vrf
+```
+
+*Tip:* VRFs are the Linux equivalent of a VRF on a router. They are the cleanest way to run overlapping address space on a single host.
+
+## systemd-networkd and netplan
+
+On servers, `systemd-networkd` or `netplan` often owns the configuration instead of NetworkManager.
+
+```bash
+# systemd-networkd status
+networkctl status
+
+# Reload networkd
+sudo networkctl reload
+
+# netplan: show the current config
+netplan get
+
+# netplan: apply a config
+sudo netplan apply
+
+# netplan: generate backend configs without applying
+sudo netplan generate
+```
+
+*Tip:* `netplan apply` is the correct way to apply a change on Ubuntu. Editing the generated files under `/run/systemd/network/` directly is overwritten on the next apply.
+
+## Wireless: iw and wpa_supplicant
+
+```bash
+# List wireless interfaces
+iw dev
+
+# Scan for networks
+sudo iw dev wlan0 scan | grep SSID
+
+# Show link quality
+iw dev wlan0 link
+
+# Connect with wpa_supplicant
+sudo wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf
+
+# Get a DHCP lease
+sudo dhclient wlan0
+```
+
+*Tip:* `iw dev wlan0 link` shows the signal strength, the bitrate, and the associated BSSID. It is the fastest way to confirm whether a wireless problem is signal or configuration.
+
 ## ethtool: Link Speed, Duplex, and Driver Info
 
 ```bash

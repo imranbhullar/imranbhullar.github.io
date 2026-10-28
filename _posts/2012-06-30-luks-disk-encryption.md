@@ -113,6 +113,94 @@ sudo cryptsetup luksHeaderRestore /dev/sdb1 --header-backup-file /root/luks-head
 
 *Tip:* The LUKS header is the single point of failure. Back it up to a separate, secure location immediately after creating the volume. Without it, a damaged header means permanent data loss.
 
+## LUKS2: The Modern Format
+
+LUKS2 is the default on modern distributions. It supports Argon2 key derivation, TPM2, FIDO2, and online re-encryption.
+
+```bash
+# Format with LUKS2 explicitly
+sudo cryptsetup luksFormat --type luks2 /dev/sdb1
+
+# Show the LUKS2 metadata
+sudo cryptsetup luksDump /dev/sdb1
+
+# Convert LUKS1 to LUKS2
+sudo cryptsetup convert --type luks2 /dev/sdb1
+```
+
+*Tip:* LUKS2 is the default on any distribution released after 2018. If `luksDump` shows `Version: 1`, the volume predates LUKS2 and should be converted.
+
+## TPM2 Unlock with systemd-cryptenroll
+
+Binding a LUKS volume to the TPM2 chip lets the system unlock it automatically at boot, without a passphrase.
+
+```bash
+# Enroll the TPM2 device
+sudo systemd-cryptenroll --tpm2-device=auto /dev/sda3
+
+# Enroll with a PCR policy
+sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0+7 /dev/sda3
+
+# List enrolled keys
+sudo systemd-cryptenroll /dev/sda3
+
+# Remove a key slot
+sudo systemd-cryptenroll --wipe-slot=tpm2 /dev/sda3
+```
+
+*Tip:* Always keep a passphrase key slot alongside the TPM2 slot. If the firmware is updated and the PCR values change, the TPM2 unlock fails and the passphrase is your only way in.
+
+## FIDO2 Unlock
+
+A FIDO2 security key can unlock a LUKS volume, which is a strong second factor for disk encryption.
+
+```bash
+# Enroll a FIDO2 key
+sudo systemd-cryptenroll --fido2-device=auto /dev/sda3
+
+# Enroll with a PIN
+sudo systemd-cryptenroll --fido2-device=auto --fido2-with-client-pin=yes /dev/sda3
+
+# List enrolled keys
+sudo systemd-cryptenroll /dev/sda3
+```
+
+*Tip:* FIDO2 unlock requires the key to be present at boot. It is a good fit for laptops, not for servers that reboot unattended.
+
+## Detached Headers
+
+A detached header stores the LUKS metadata on a separate device, which lets you keep the header on a USB stick or a separate partition.
+
+```bash
+# Format with a detached header
+sudo cryptsetup luksFormat --header /boot/luks-header.img /dev/sdb1
+
+# Open with a detached header
+sudo cryptsetup luksOpen --header /boot/luks-header.img /dev/sdb1 data
+
+# Back up the header
+sudo cryptsetup luksHeaderBackup /dev/sdb1 --header-backup-file /root/luks-header.img
+```
+
+*Tip:* A detached header is a strong defence against offline attacks, because the attacker has no header to attack. It also means losing the header means losing the data, so back it up.
+
+## Online Re-encryption
+
+`cryptsetup reencrypt` changes the encryption key or cipher without taking the volume offline.
+
+```bash
+# Re-encrypt with a new key
+sudo cryptsetup reencrypt /dev/sdb1
+
+# Re-encrypt with a new cipher
+sudo cryptsetup reencrypt --cipher aes-xts-plain64 --key-size 512 /dev/sdb1
+
+# Check progress
+sudo cryptsetup status /dev/mapper/data
+```
+
+*Tip:* Online re-encryption is safe but slow. Run it in `tmux` and do not interrupt it, because an interrupted re-encryption leaves the volume in a state that requires the header backup to recover.
+
 ## Quick Reference
 
 ```bash

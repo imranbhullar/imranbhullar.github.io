@@ -154,6 +154,81 @@ echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 
 *Tip:* `fallocate` is fast but can create sparse files on some filesystems. If `swapon` complains, use `dd if=/dev/zero of=/swapfile bs=1M count=4096` instead.
 
+## btrfs: Subvolumes and Snapshots
+
+btrfs is a copy-on-write filesystem with built-in snapshots, subvolumes, and checksums.
+
+```bash
+# Create a btrfs filesystem
+sudo mkfs.btrfs /dev/sdb1
+
+# Mount it
+sudo mount /dev/sdb1 /mnt/data
+
+# Create a subvolume
+sudo btrfs subvolume create /mnt/data/@home
+
+# Create a snapshot
+sudo btrfs subvolume snapshot /mnt/data/@home /mnt/data/@home-snap
+
+# List subvolumes
+sudo btrfs subvolume list /mnt/data
+
+# Show filesystem usage
+sudo btrfs filesystem usage /mnt/data
+
+# Scrub for errors
+sudo btrfs scrub start /mnt/data
+```
+
+*Tip:* btrfs snapshots are nearly free, which makes them ideal for pre-upgrade rollbacks. They are not backups, because they live on the same filesystem.
+
+## ZFS on Linux
+
+ZFS is a combined filesystem and volume manager with checksums, snapshots, and replication.
+
+```bash
+# Install
+sudo apt install zfsutils-linux
+
+# Create a pool
+sudo zpool create tank /dev/sdb
+
+# Create a dataset
+sudo zfs create tank/data
+
+# Create a snapshot
+sudo zfs snapshot tank/data@2026-01-01
+
+# List snapshots
+sudo zfs list -t snapshot
+
+# Send a snapshot to another host
+sudo zfs send tank/data@2026-01-01 | ssh backup zfs receive backup/data
+
+# Scrub the pool
+sudo zpool scrub tank
+```
+
+*Tip:* `zfs send | zfs receive` is the cleanest replication mechanism on Linux. It is incremental, checksummed, and resumable, which makes it ideal for offsite backups.
+
+## parted resizepart and sfdisk/sgdisk Scripting
+
+```bash
+# Grow a partition to fill the disk
+sudo parted /dev/sdb --script resizepart 1 100%
+
+# Script a partition table with sfdisk
+echo 'label: gpt
+,10G,L
+,,L' | sudo sfdisk /dev/sdb
+
+# Script a partition table with sgdisk
+sudo sgdisk --new=1:0:+10G --new=2:0:0 /dev/sdb
+```
+
+*Tip:* `sfdisk` and `sgdisk` are the correct tools for automation. `fdisk` and `parted` are interactive, which makes them unsuitable for scripts.
+
 ## Quick Reference
 
 ```bash

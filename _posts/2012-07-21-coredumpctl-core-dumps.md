@@ -110,6 +110,61 @@ du -sh /var/lib/systemd/coredump/
 
 *Tip:* Cores are large. A single core can be gigabytes, and a crash loop can fill a disk in minutes. Set `MaxUse` in `coredump.conf` to cap the total size.
 
+## coredumpctl debug: Interactive Debugging
+
+`coredumpctl debug` opens the core in `gdb` with the binary and symbols already loaded.
+
+```bash
+# Open the most recent core in gdb
+coredumpctl debug
+
+# Open a specific core
+coredumpctl debug 1234
+
+# Pass extra arguments to gdb
+coredumpctl debug 1234 -- -ex "thread apply all bt"
+```
+
+*Tip:* `coredumpctl debug` is the fastest path from "it crashed" to a backtrace. It handles the binary, the core, and the debug symbols in one command.
+
+## systemd-coredump Configuration
+
+```bash
+# /etc/systemd/coredump.conf
+
+[Coredump]
+Storage=external
+Compress=yes
+ProcessSizeMax=2G
+ExternalSizeMax=2G
+MaxUse=1G
+KeepFree=1G
+```
+
+```bash
+# Apply the change
+sudo systemctl restart systemd-coredump.socket
+```
+
+*Tip:* `KeepFree=` reserves free space on the filesystem, which prevents a crash loop from filling the disk. It is the single most important setting on a production host.
+
+## systemd-pstore: Persistent Storage for Cores
+
+`systemd-pstore` saves kernel oops and panic data from the firmware's persistent storage (pstore) to disk, so it survives a reboot.
+
+```bash
+# Is it running?
+systemctl status systemd-pstore
+
+# Show saved pstore data
+ls /var/lib/systemd/pstore/
+
+# Trigger a save manually
+sudo systemctl start systemd-pstore
+```
+
+*Tip:* `systemd-pstore` is the only way to recover a kernel panic log after a reboot. It is enabled by default on most modern distributions.
+
 ## Quick Reference
 
 ```bash

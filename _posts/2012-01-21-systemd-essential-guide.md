@@ -440,6 +440,262 @@ systemd-analyze critical-chain
 
 *Tip:* `systemd-analyze verify` catches typos in unit files before you restart anything, and `systemd-analyze critical-chain` shows the exact dependency path that is slowing down boot.
 
+## systemd-run: Transient Units and Resource Limits
+
+`systemd-run` starts a command as a transient unit without writing a unit file. It is the fastest way to apply cgroup limits to a one-off command.
+
+```bash
+# Run a command as a transient service
+sudo systemd-run --unit=myjob /usr/local/bin/backup.sh
+
+# Run with a memory limit
+sudo systemd-run --scope -p MemoryMax=512M /usr/local/bin/heavy.sh
+
+# Run with a CPU quota
+sudo systemd-run --scope -p CPUQuota=50% /usr/local/bin/heavy.sh
+
+# Run a transient timer
+sudo systemd-run --on-calendar="*-*-* 02:00:00" /usr/local/bin/backup.sh
+
+# List transient units
+systemctl list-units --type=service | grep run-
+```
+
+*Tip:* `systemd-run --scope` runs the command in the caller's cgroup, which is useful for interactive commands. Without `--scope`, it creates a separate service unit.
+
+## systemd-cgtop: Live Resource Usage per cgroup
+
+```bash
+# Live view of cgroup resource usage
+systemd-cgtop
+
+# Sort by memory
+systemd-cgtop -m
+
+# Sort by CPU
+systemd-cgtop -c
+
+# Show only a specific slice
+systemd-cgtop /system.slice
+```
+
+*Tip:* `systemd-cgtop` is the fastest way to see which service is consuming CPU or memory right now, without attaching to each process individually.
+
+## systemd-analyze security: Scoring Unit Hardening
+
+```bash
+# Score a unit from 0 (bad) to 10 (good)
+systemd-analyze security myapp
+
+# Show the full list of directives and their status
+systemd-analyze security myapp --no-pager
+
+# Score every running service
+systemd-analyze security --recursive
+```
+
+*Tip:* `systemd-analyze security` lists every directive you have not set, which makes it the fastest way to find the next hardening step.
+
+## systemd-resolved and resolvectl
+
+`systemd-resolved` is the local DNS stub resolver on many distributions.
+
+```bash
+# Is it running?
+systemctl status systemd-resolved
+
+# Show the current DNS servers
+resolvectl status
+
+# Query a name
+resolvectl query example.com
+
+# Flush the cache
+sudo resolvectl flush-caches
+
+# Show cache statistics
+resolvectl statistics
+```
+
+*Tip:* `resolvectl query` uses the same resolution path as applications, including `/etc/hosts` and per-link DNS. It is the fastest way to confirm what a host will actually resolve.
+
+## systemd-networkd
+
+`systemd-networkd` is a lightweight network manager that reads `.network` and `.netdev` files.
+
+```bash
+# Is it running?
+systemctl status systemd-networkd
+
+# Show link status
+networkctl status
+
+# List links
+networkctl list
+
+# Reload configuration
+sudo networkctl reload
+```
+
+```ini
+# /etc/systemd/network/10-eth0.network
+[Match]
+Name=eth0
+
+[Network]
+Address=10.0.0.5/24
+Gateway=10.0.0.1
+DNS=8.8.8.8
+```
+
+*Tip:* `networkctl status` shows the link state, the addresses, and which `.network` file matched. It is the fastest way to debug a networkd configuration.
+
+## systemd-boot and Unified Kernel Images
+
+`systemd-boot` is a simple UEFI boot manager, and Unified Kernel Images (UKIs) bundle the kernel, initramfs, and command line into a single signed file.
+
+```bash
+# Install systemd-boot
+sudo bootctl install
+
+# Show boot entries
+bootctl list
+
+# Show the current boot status
+bootctl status
+
+# Update the bootloader
+sudo bootctl update
+
+# Build a UKI
+sudo kernel-install add $(uname -r) /boot/vmlinuz-$(uname -r)
+```
+
+*Tip:* UKIs are the cleanest way to sign a boot chain. The kernel, initramfs, and command line are all covered by a single signature, which makes Secure Boot verification straightforward.
+
+## systemd-nspawn and machinectl
+
+`systemd-nspawn` runs a container using namespaces and cgroups, with no daemon and no image format.
+
+```bash
+# Boot a container from a directory
+sudo systemd-nspawn -D /var/lib/machines/mycontainer
+
+# Boot a container and log in
+sudo systemd-nspawn -bD /var/lib/machines/mycontainer
+
+# List running containers
+machinectl list
+
+# Open a shell in a running container
+sudo machinectl shell mycontainer
+
+# Pull a container image
+sudo machinectl pull-tar https://example.com/container.tar
+```
+
+*Tip:* `systemd-nspawn` is the simplest way to run a full system container on a single host. It is not a Docker replacement, but it is far lighter than a VM.
+
+## systemd-creds and systemd-cryptenroll
+
+`systemd-creds` encrypts secrets for use in unit files, and `systemd-cryptenroll` binds LUKS volumes to TPM2 or FIDO2.
+
+```bash
+# Encrypt a credential
+systemd-creds encrypt --name=db-password - /etc/myapp/db.cred
+
+# Use it in a unit
+# LoadCredentialEncrypted=db-password:/etc/myapp/db.cred
+
+# Enroll a TPM2 device in a LUKS volume
+sudo systemd-cryptenroll --tpm2-device=auto /dev/sda3
+
+# Enroll a FIDO2 key
+sudo systemd-cryptenroll --fido2-device=auto /dev/sda3
+
+# List enrolled keys
+sudo systemd-cryptenroll /dev/sda3
+```
+
+*Tip:* `LoadCredentialEncrypted=` is the correct way to pass secrets to a service. The secret is decrypted into the service's private credential directory and never appears in the unit file or the environment.
+
+## systemd-sysext and systemd-confext
+
+`systemd-sysext` overlays extension images onto `/usr` and `/opt`, and `systemd-confext` does the same for `/etc`.
+
+```bash
+# Merge extension images
+sudo systemd-sysext merge
+
+# Show merged extensions
+systemd-sysext status
+
+# Unmerge
+sudo systemd-sysext unmerge
+
+# Refresh after adding an image
+sudo systemd-sysext refresh
+```
+
+*Tip:* sysext images are read-only overlays, which makes them ideal for shipping vendor agents or debug tools without modifying the base OS.
+
+## systemd-repart and systemd-homed
+
+`systemd-repart` grows or creates partitions from a declarative config, and `systemd-homed` manages home directories as portable, encrypted images.
+
+```bash
+# Show what repart would do
+sudo systemd-repart --dry-run=yes
+
+# Apply the partition changes
+sudo systemd-repart
+
+# Create a homed user
+sudo homectl create alice --storage=luks
+
+# List homed users
+homectl list
+
+# Activate a home directory
+sudo homectl activate alice
+```
+
+*Tip:* `systemd-repart` is the cleanest way to grow a root partition on first boot in a cloud image. It reads `/usr/lib/repart.d/*.conf` and applies the changes idempotently.
+
+## systemd-oomd
+
+`systemd-oomd` kills cgroups under memory pressure before the kernel OOM killer has to act.
+
+```bash
+# Is it running?
+systemctl status systemd-oomd
+
+# Show the current pressure
+systemd-oomdctl
+
+# Check the configured thresholds
+cat /etc/systemd/oomd.conf
+```
+
+*Tip:* `systemd-oomd` acts on cgroup-level pressure, which is far more targeted than the kernel OOM killer. It is enabled by default on Fedora and many desktop distributions.
+
+## systemd-pcrlock
+
+`systemd-pcrlock` manages TPM2 PCR policies, which is how you bind a LUKS volume to a specific boot chain.
+
+```bash
+# Show the current PCR policy
+sudo systemd-pcrlock
+
+# Lock a policy
+sudo systemd-pcrlock lock
+
+# Remove a policy
+sudo systemd-pcrlock remove
+```
+
+*Tip:* `systemd-pcrlock` is the modern replacement for hand-written PCR policies. It is the correct way to bind disk encryption to Secure Boot measurements.
+
 ## Bonus: Useful systemctl Shortcuts Worth Memorising
 
 A handful of commands cover most day-to-day work and save a surprising amount of typing.

@@ -175,6 +175,93 @@ ssh-keygen -F host.example.com
 
 *Tip:* `ssh-keygen -R` is the correct way to remove a host from `known_hosts`. Editing the file by hand leaves hashed entries behind and the warning keeps coming back.
 
+## SSH Certificates: Short-Lived Access
+
+SSH certificates replace long-lived `authorized_keys` entries with short-lived, signed credentials. They are the cleanest way to grant access at scale.
+
+```bash
+# Create a CA key
+ssh-keygen -t ed25519 -f ~/.ssh/ca -C "ssh-ca"
+
+# Sign a user key
+ssh-keygen -s ~/.ssh/ca -I alice -n alice -V +1d ~/.ssh/id_ed25519.pub
+
+# Sign a host key
+ssh-keygen -s ~/.ssh/ca -I host1 -h -n host1.example.com -V +52w /etc/ssh/ssh_host_ed25519_key.pub
+
+# Trust the CA on the server
+echo "TrustedUserCAKeys /etc/ssh/ca.pub" | sudo tee -a /etc/ssh/sshd_config
+
+# Trust the CA on the client
+echo "@cert-authority *.example.com $(cat ~/.ssh/ca.pub)" >> ~/.ssh/known_hosts
+```
+
+*Tip:* `-V +1d` sets a one-day validity. Short-lived certificates are the single biggest improvement you can make to SSH access management, because revocation becomes unnecessary.
+
+## AuthorizedKeysCommand: Dynamic Key Lookup
+
+`AuthorizedKeysCommand` lets `sshd` fetch a user's keys from an external source, such as LDAP or a database.
+
+```bash
+# /etc/ssh/sshd_config
+AuthorizedKeysCommand /usr/local/bin/fetch-keys %u
+AuthorizedKeysCommandUser nobody
+```
+
+```bash
+#!/usr/bin/env bash
+# /usr/local/bin/fetch-keys
+user="$1"
+curl -fsS "https://keys.example.com/${user}" || exit 1
+```
+
+*Tip:* `AuthorizedKeysCommandUser` must be a non-root user. `sshd` refuses to start if it is root, which is a deliberate safety measure.
+
+## sshd -T: Dumping the Effective Config
+
+```bash
+# Show the effective configuration
+sudo sshd -T
+
+# Show a specific setting
+sudo sshd -T | grep -i passwordauth
+
+# Show the effective config for a specific user
+sudo sshd -T -C user=alice,host=example.com,addr=10.0.0.5
+```
+
+*Tip:* `sshd -T` shows the merged configuration, including `Match` blocks. It is the only reliable way to confirm what `sshd` will actually do.
+
+## ssh -Q: Querying Supported Algorithms
+
+```bash
+# Supported key types
+ssh -Q key
+
+# Supported ciphers
+ssh -Q cipher
+
+# Supported MACs
+ssh -Q mac
+
+# Supported KEX algorithms
+ssh -Q kex
+```
+
+*Tip:* `ssh -Q` is the fastest way to confirm whether a client supports a specific algorithm before you remove it from `sshd_config`.
+
+## ssh-keygen -Y: Signing and Verifying
+
+```bash
+# Sign a file
+ssh-keygen -Y sign -f ~/.ssh/id_ed25519 -n file document.txt
+
+# Verify a signature
+ssh-keygen -Y verify -f allowed_signers -I alice@example.com -n file -s document.txt.sig < document.txt
+```
+
+*Tip:* `ssh-keygen -Y sign` is the standard way to sign git commits and release artifacts with an SSH key. It is simpler than GPG and uses the same key you already have.
+
 ## Quick Reference
 
 ```bash

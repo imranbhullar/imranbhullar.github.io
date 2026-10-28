@@ -114,6 +114,101 @@ sudo iscsiadm -m session
 
 *Tip:* For network filesystems, add `_netdev` to the `fstab` options so systemd waits for the network before attempting the mount. Without it, boot can hang or fail.
 
+## systemd Mount Units
+
+systemd can manage mounts directly, which is useful when you need dependency ordering or automatic retry.
+
+```ini
+# /etc/systemd/system/mnt-data.mount
+[Unit]
+Description=Data mount
+After=network-online.target
+
+[Mount]
+What=/dev/disk/by-uuid/xxxx-xxxx
+Where=/mnt/data
+Type=xfs
+Options=defaults,noatime
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```bash
+# Enable the mount
+sudo systemctl enable --now mnt-data.mount
+
+# Check the status
+systemctl status mnt-data.mount
+
+# List mount units
+systemctl list-units --type=mount
+```
+
+*Tip:* The unit name must match the mount point with slashes replaced by dashes. `/mnt/data` becomes `mnt-data.mount`, and a mismatch means the unit is ignored.
+
+## systemd Automount
+
+An automount unit mounts a filesystem on first access, which is ideal for network shares and removable media.
+
+```ini
+# /etc/systemd/system/mnt-data.automount
+[Unit]
+Description=Automount data
+
+[Automount]
+Where=/mnt/data
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```bash
+# Enable the automount
+sudo systemctl enable --now mnt-data.automount
+
+# Check the status
+systemctl status mnt-data.automount
+```
+
+*Tip:* An automount unit needs a matching `.mount` unit. The automount triggers the mount on first access, and the mount unit does the actual work.
+
+## autofs
+
+`autofs` is the classic automounter, and it is still the right tool for large NFS environments.
+
+```bash
+# Install
+sudo apt install autofs
+
+# Configure a direct map
+# /etc/auto.master.d/data.autofs
+# /-  /etc/auto.data
+
+# /etc/auto.data
+# /mnt/data  -rw,soft,intr  nfs-server:/export/data
+
+# Restart
+sudo systemctl restart autofs
+```
+
+*Tip:* `autofs` is more flexible than systemd automount for large NFS environments, because it supports wildcards and indirect maps. Use systemd automount for a handful of mounts and `autofs` for hundreds.
+
+## mount --bind
+
+```bash
+# Bind-mount a directory
+sudo mount --bind /srv/data /mnt/data
+
+# Bind-mount read-only
+sudo mount --bind -o ro /srv/data /mnt/data
+
+# Make it persistent in fstab
+# /srv/data  /mnt/data  none  bind  0 0
+```
+
+*Tip:* `mount --bind` is the cleanest way to expose a directory at a second path without copying it. It is how most chroot and container setups work.
+
 ## Quick Reference
 
 ```bash

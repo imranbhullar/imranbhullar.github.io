@@ -145,6 +145,86 @@ sudo journalctl --vacuum-time=30d
 
 *Tip:* A full `/var/log` is one of the most common causes of a full root filesystem. Set a journal size limit and a logrotate retention policy on every host.
 
+## rsyslog Templates
+
+Templates control the format of log messages, which is essential when forwarding to a central collector.
+
+```bash
+# /etc/rsyslog.d/50-templates.conf
+
+# JSON template
+template(name="json" type="string"
+  string="{\"time\":\"%timereported:::date-rfc3339%\",\"host\":\"%hostname%\",\"app\":\"%programname%\",\"msg\":\"%msg:::json%\"}\n")
+
+# Use the template
+*.* action(type="omfile" file="/var/log/json.log" template="json")
+
+# Forward with the template
+*.* action(type="omfwd" target="logserver.example.com" port="514" protocol="tcp" template="json")
+```
+
+*Tip:* JSON templates are the cleanest way to forward logs to a modern collector. They preserve structure, which plain syslog does not.
+
+## rsyslog Queues
+
+Queues buffer messages when the destination is slow or unavailable, which prevents log loss during a network outage.
+
+```bash
+# /etc/rsyslog.d/50-queues.conf
+
+# Disk-assisted queue
+*.* action(type="omfwd" target="logserver.example.com" port="514" protocol="tcp"
+  queue.type="LinkedList"
+  queue.filename="fwdq"
+  queue.size="100000"
+  queue.maxdiskspace="1g"
+  queue.saveonshutdown="on"
+  action.resumeRetryCount="-1")
+```
+
+*Tip:* `queue.type="LinkedList"` with `queue.filename` gives you a disk-assisted queue that survives a restart. It is the single most important setting for reliable remote logging.
+
+## rsyslog TLS
+
+```bash
+# /etc/rsyslog.d/50-tls.conf
+
+# Load the TLS module
+module(load="imtcp" StreamDriver.Name="gtls" StreamDriver.Mode="1" StreamDriver.AuthMode="x509/name")
+
+# Server certificate
+global(
+  DefaultNetstreamDriver="gtls"
+  DefaultNetstreamDriverCAFile="/etc/ssl/certs/ca.crt"
+  DefaultNetstreamDriverCertFile="/etc/ssl/certs/server.crt"
+  DefaultNetstreamDriverKeyFile="/etc/ssl/private/server.key"
+)
+
+# Forward over TLS
+*.* action(type="omfwd" target="logserver.example.com" port="6514" protocol="tcp" StreamDriver="gtls" StreamDriverMode="1" StreamDriverAuthMode="x509/name")
+```
+
+*Tip:* Always use TLS for remote logging on any network you do not fully control. Plain TCP syslog sends credentials and log contents in clear text.
+
+## logrotate dateext and dateformat
+
+```bash
+# /etc/logrotate.d/myapp
+/var/log/myapp/*.log {
+    daily
+    rotate 14
+    compress
+    delaycompress
+    missingok
+    notifempty
+    dateext
+    dateformat -%Y%m%d-%s
+    create 0640 myapp myapp
+}
+```
+
+*Tip:* `dateext` with `dateformat` makes rotated files sortable and unambiguous. It is far better than the default numeric suffix, which is hard to correlate with a date.
+
 ## Quick Reference
 
 ```bash

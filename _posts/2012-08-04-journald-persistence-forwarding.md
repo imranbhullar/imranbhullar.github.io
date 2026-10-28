@@ -131,6 +131,73 @@ journalctl -u nginx --no-pager
 
 *Tip:* `journalctl --list-boots` is the fastest way to find the boot you need. The index is stable, so `-b -1` always means "the boot before this one".
 
+## systemd-journal-remote: Centralised Collection
+
+`systemd-journal-remote` receives journal entries over HTTP or HTTPS and stores them in a local journal.
+
+```bash
+# Install
+sudo apt install systemd-journal-remote
+
+# Enable the receiver
+sudo systemctl enable --now systemd-journal-remote.socket
+
+# Configure the receiver
+# /etc/systemd/journal-remote.conf
+# [Remote]
+# SplitMode=host
+# ServerKeyFile=/etc/ssl/private/journal-remote.key
+# ServerCertificateFile=/etc/ssl/certs/journal-remote.crt
+# TrustedCertificateFile=/etc/ssl/certs/ca.crt
+```
+
+```bash
+# On the client: forward to the collector
+# /etc/systemd/journald.conf
+# [Journal]
+# UploadURL=https://logserver.example.com:19532
+# ServerKeyFile=/etc/ssl/private/client.key
+# ServerCertificateFile=/etc/ssl/certs/client.crt
+# TrustedCertificateFile=/etc/ssl/certs/ca.crt
+```
+
+*Tip:* `systemd-journal-remote` is the native way to centralise journals. It preserves structured fields, which plain syslog forwarding does not.
+
+## systemd-journal-gatewayd: HTTP Access to the Journal
+
+`systemd-journal-gatewayd` exposes the journal over HTTP, which is useful for dashboards and remote queries.
+
+```bash
+# Enable the gateway
+sudo systemctl enable --now systemd-journal-gatewayd.socket
+
+# Query the journal over HTTP
+curl -s http://localhost:19531/entries?follow
+
+# Query with a filter
+curl -s 'http://localhost:19531/entries?unit=nginx.service'
+```
+
+*Tip:* `systemd-journal-gatewayd` is read-only and does not require authentication by default. Put it behind a reverse proxy with authentication before exposing it.
+
+## journalctl --output-fields and --facility
+
+```bash
+# Show only specific fields
+journalctl -o json --output-fields=MESSAGE,PRIORITY,_PID
+
+# Filter by facility
+journalctl --facility=auth
+
+# Filter by facility and priority
+journalctl --facility=auth -p warning
+
+# List available facilities
+journalctl --facility=help
+```
+
+*Tip:* `--output-fields` is the fastest way to reduce the volume of `-o json` output. It is essential when piping into `jq`.
+
 ## Quick Reference
 
 ```bash

@@ -128,6 +128,114 @@ cat /sys/fs/cgroup/system.slice/docker-*.scope/memory.max
 
 *Tip:* When a container is OOM-killed, `docker inspect` shows `OOMKilled: true`. The fix is usually a higher `--memory` limit or a memory leak in the application, not a Docker bug.
 
+## Podman: Rootless Containers
+
+Podman is daemonless and rootless by default, which makes it a better fit for single-host deployments and CI.
+
+```bash
+# Run a rootless container
+podman run -d --name web -p 8080:80 nginx
+
+# Run as a specific user
+podman run --user 1000:1000 -it alpine sh
+
+# Generate a systemd unit from a running container
+podman generate systemd --new --name web > ~/.config/systemd/user/web.service
+
+# Enable it as a user service
+systemctl --user enable --now web.service
+
+# Enable lingering so it starts without a login
+sudo loginctl enable-linger $USER
+```
+
+*Tip:* `podman generate systemd` is the cleanest way to make a container survive a reboot without a daemon. Combine it with `loginctl enable-linger` so the user service starts at boot.
+
+## Quadlet: systemd-Native Containers
+
+Quadlet is the modern replacement for `podman generate systemd`. It reads `.container` files and generates units automatically.
+
+```ini
+# ~/.config/containers/systemd/web.container
+[Unit]
+Description=Web container
+
+[Container]
+Image=docker.io/library/nginx:latest
+PublishPort=8080:80
+
+[Install]
+WantedBy=default.target
+```
+
+```bash
+# Reload and start
+systemctl --user daemon-reload
+systemctl --user start web.service
+
+# Check the generated unit
+systemctl --user cat web.service
+```
+
+*Tip:* Quadlet is the recommended way to run containers under systemd on modern Podman. It is declarative, and the generated unit is regenerated on every `daemon-reload`.
+
+## buildah and skopeo
+
+`buildah` builds images without a daemon, and `skopeo` copies and inspects images without pulling them.
+
+```bash
+# Build an image from a Containerfile
+buildah bud -t myapp:latest .
+
+# List images
+buildah images
+
+# Inspect a remote image without pulling it
+skopeo inspect docker://docker.io/library/nginx:latest
+
+# Copy an image between registries
+skopeo copy docker://docker.io/library/nginx:latest docker://registry.example.com/nginx:latest
+```
+
+*Tip:* `skopeo inspect` is the fastest way to check an image's labels, architecture, and digest without downloading it.
+
+## The OCI Spec and Runtimes
+
+Containers are standardised by the Open Container Initiative (OCI), which defines the image format and the runtime spec.
+
+```bash
+# List available OCI runtimes
+docker info | grep -i runtime
+
+# Run a container with a specific runtime
+docker run --runtime=runc -it alpine sh
+
+# Inspect the OCI config of a running container
+sudo ctr containers info <id>
+```
+
+*Tip:* `runc` is the reference runtime, `crun` is a faster C implementation, and `youki` is a Rust implementation. They are interchangeable, and the choice rarely matters outside of startup latency.
+
+## systemd-nspawn: System Containers
+
+`systemd-nspawn` runs a full system container using namespaces and cgroups, with no daemon and no image format.
+
+```bash
+# Boot a container from a directory
+sudo systemd-nspawn -D /var/lib/machines/mycontainer
+
+# Boot a container and log in
+sudo systemd-nspawn -bD /var/lib/machines/mycontainer
+
+# List running containers
+machinectl list
+
+# Open a shell in a running container
+sudo machinectl shell mycontainer
+```
+
+*Tip:* `systemd-nspawn` is the simplest way to run a full system container on a single host. It is not a Docker replacement, but it is far lighter than a VM.
+
 ## Quick Reference
 
 ```bash

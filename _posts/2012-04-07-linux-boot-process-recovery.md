@@ -142,6 +142,66 @@ sudo systemctl default
 
 *Tip:* Rescue mode mounts local filesystems and starts a shell. Emergency mode mounts only the root filesystem, read-only. Use emergency when rescue itself fails.
 
+## systemd-boot and bootctl
+
+`systemd-boot` is a simple UEFI boot manager that reads entries from the EFI System Partition.
+
+```bash
+# Install systemd-boot
+sudo bootctl install
+
+# Show boot entries
+bootctl list
+
+# Show the current boot status
+bootctl status
+
+# Update the bootloader
+sudo bootctl update
+
+# Set the default entry
+sudo bootctl set-default myentry.conf
+```
+
+*Tip:* `bootctl status` shows the current boot entry, the firmware, and the Secure Boot state. It is the fastest way to confirm what actually booted.
+
+## Unified Kernel Images (UKI)
+
+A UKI bundles the kernel, initramfs, and command line into a single signed file, which makes Secure Boot verification straightforward.
+
+```bash
+# Build a UKI
+sudo kernel-install add $(uname -r) /boot/vmlinuz-$(uname -r)
+
+# List installed UKIs
+ls /boot/EFI/Linux/
+
+# Inspect a UKI
+ukify inspect /boot/EFI/Linux/*.efi
+```
+
+*Tip:* UKIs are the cleanest way to sign a boot chain. The kernel, initramfs, and command line are all covered by a single signature, which makes Secure Boot verification straightforward.
+
+## kernel-install
+
+`kernel-install` is the standard way to add and remove kernels, and it works with both GRUB and systemd-boot.
+
+```bash
+# Add a kernel
+sudo kernel-install add $(uname -r) /boot/vmlinuz-$(uname -r)
+
+# Remove a kernel
+sudo kernel-install remove 5.15.0-91-generic
+
+# List installed kernels
+ls /boot/vmlinuz-*
+
+# Inspect the kernel-install plugins
+ls /usr/lib/kernel/install.d/
+```
+
+*Tip:* `kernel-install` is the correct way to manage kernels on modern systems. It handles the bootloader entry, the initramfs, and the UKI in one command.
+
 ## Quick Reference
 
 ```bash

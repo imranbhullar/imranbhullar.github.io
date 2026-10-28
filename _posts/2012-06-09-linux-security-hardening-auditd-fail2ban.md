@@ -158,6 +158,103 @@ sudo dpkg-reconfigure --priority=low unattended-upgrades
 
 *Tip:* Disabling unused services is the highest-value hardening step. Every running service is an attack surface, and most servers run far more than they need.
 
+## auditd Rule Deep Dive
+
+Audit rules are more expressive than the examples above. These are the patterns you will use most often.
+
+```bash
+# Watch a directory tree for writes and attribute changes
+-w /etc/ -p wa -k etc_changes
+
+# Watch a file for reads and writes
+-w /etc/shadow -p rw -k shadow_access
+
+# Log every command executed by a specific user
+-a always,exit -F arch=b64 -S execve -F auid=1000 -k user_exec
+
+# Log every failed file open
+-a always,exit -F arch=b64 -S openat -F exit=-EACCES -k access_denied
+
+# Log every privilege escalation
+-a always,exit -F arch=b64 -S setuid -S setgid -S setreuid -S setregid -k privilege
+
+# Log every mount
+-a always,exit -F arch=b64 -S mount -k mount
+
+# Log every module load
+-a always,exit -F arch=b64 -S init_module -S finit_module -k module_load
+```
+
+*Tip:* `-F auid=1000` filters by the original login UID, which survives `sudo`. It is the correct way to attribute actions to a user rather than to root.
+
+## ausearch and aureport Deep Dive
+
+```bash
+# Search by key
+sudo ausearch -k etc_changes
+
+# Search by user
+sudo ausearch -ua 1000
+
+# Search by time window
+sudo ausearch -ts today -te now
+
+# Search by syscall
+sudo ausearch -sc execve
+
+# Interpret numeric fields
+sudo ausearch -k etc_changes -i
+
+# Summary report
+sudo aureport --summary
+
+# Authentication report
+sudo aureport -au
+
+# Failed events only
+sudo aureport --failed
+
+# File access report
+sudo aureport -f
+```
+
+*Tip:* `ausearch -i` interprets numeric UIDs, GIDs, and syscall numbers into names. It is the difference between a readable report and a wall of numbers.
+
+## fail2ban Custom Filters
+
+A custom filter lets you ban on any log pattern, not just the built-in ones.
+
+```ini
+# /etc/fail2ban/filter.d/myapp.conf
+[Definition]
+failregex = ^.*Invalid login attempt from <HOST>.*$
+ignoreregex =
+```
+
+```ini
+# /etc/fail2ban/jail.d/myapp.conf
+[myapp]
+enabled  = true
+port     = http,https
+filter   = myapp
+logpath  = /var/log/myapp/auth.log
+maxretry = 3
+bantime  = 1h
+```
+
+```bash
+# Test the filter against a log file
+sudo fail2ban-regex /var/log/myapp/auth.log /etc/fail2ban/filter.d/myapp.conf
+
+# Reload
+sudo systemctl reload fail2ban
+
+# Check the jail
+sudo fail2ban-client status myapp
+```
+
+*Tip:* `fail2ban-regex` is the only reliable way to test a filter. It shows exactly which lines match and which do not, which saves hours of guessing.
+
 ## Quick Reference
 
 ```bash
