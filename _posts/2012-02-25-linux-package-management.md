@@ -87,9 +87,28 @@ pacman -Q
 dpkg -S /usr/sbin/nginx
 rpm -qf /usr/sbin/nginx
 pacman -Qo /usr/sbin/nginx
+
+# Which package *would* own it, even if not installed yet?
+apt-file search bin/nginx
+dnf provides '*/bin/nginx'
 ```
 
-*Tip:* "Which package owns this file?" is the single most useful query when you inherit a system and need to know where a binary came from.
+*Tip:* "Which package owns this file?" is the single most useful query when you inherit a system and need to know where a binary came from. `dpkg -S` and `rpm -qf` only know about installed packages; `apt-file` and `dnf provides` search the archive, so they also find packages you have not installed yet. Run `sudo apt install apt-file && sudo apt-file update` once on Debian.
+
+## Listing the Files a Package Installs
+
+```bash
+# Debian / Ubuntu
+dpkg -L nginx
+
+# RHEL / Fedora
+rpm -ql nginx
+
+# Arch
+pacman -Ql nginx
+```
+
+*Tip:* `dpkg -L` is the fastest way to find the config file a package dropped somewhere unexpected, or to confirm a binary really came from the package you think it did.
 
 ## Upgrading the System
 
@@ -134,7 +153,37 @@ sudo zypper removelock nginx
 # IgnorePkg = nginx
 ```
 
-*Tip:* `apt-mark hold` is the fastest way to stop an unattended-upgrades run from breaking a pinned service.
+*Tip:* `apt-mark hold` is the fastest way to stop an unattended-upgrades run from breaking a pinned service. On RHEL, `versionlock` comes from the `dnf-plugins-core` package.
+
+## Rolling Back a Bad Update
+
+Holding a package stops the *next* upgrade. Rolling back undoes one that already happened.
+
+```bash
+# RHEL / Fedora: undo the last transaction
+sudo dnf history
+sudo dnf history undo last
+
+# Debian / Ubuntu: install a specific older version
+apt-cache policy nginx
+sudo apt install nginx=1.18.0-6ubuntu14
+```
+
+*Tip:* Debian does not keep a transaction history like `dnf`. Pin the version explicitly, and keep the `.deb` files in `/var/cache/apt/archives` if you may need to reinstall an older build. `apt-cache policy` shows every available version and which one is the candidate.
+
+## Previewing Changes Before Applying Them
+
+```bash
+# Debian / Ubuntu
+apt list --upgradable
+sudo apt -s upgrade
+
+# RHEL / Fedora
+dnf check-update
+sudo dnf upgrade --assumeno
+```
+
+*Tip:* `apt -s` and `dnf --assumeno` run the whole transaction and stop before committing. It is the fastest way to see exactly which packages would be added, removed, or upgraded.
 
 ## Working with Local Package Files
 
@@ -261,3 +310,7 @@ yay -Syu
 | File owner | `dpkg -S` | `rpm -qf` | `rpm -qf` | `pacman -Qo` |
 
 *Tip:* Learn the four verbs — refresh, install, remove, upgrade — and you can operate any distribution. The flags differ, the mental model does not.
+
+## See Also
+
+* [Linux Disk Usage Tips](/posts/linux-disk-usage-tips/) — reclaiming space from package caches and orphaned dependencies.

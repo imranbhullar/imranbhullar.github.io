@@ -66,6 +66,8 @@ Key columns:
 
 *Tip:* `%util` near 100% with high `await` is the classic signature of a saturated disk. If `%util` is low but `await` is high, the problem is upstream, not the disk.
 
+*Tip:* `iostat` tells you the disk is *busy*, not that it is *full*. If writes fail with `No space left on device`, see [Linux Disk Usage Tips](/posts/linux-disk-usage-tips/) for the `df` / `du` / `lsof +L1` playbook.
+
 ## sar: Historical Performance Data
 
 `sar` records performance data over time, which is invaluable when you need to know what happened at 3 a.m.

@@ -279,6 +279,22 @@ WantedBy=timers.target
 
 *Tip:* `systemctl list-timers --all` shows every timer, including inactive ones, along with the last and next run times. It is the fastest way to audit scheduled jobs on a systemd host.
 
+### Testing an `OnCalendar` Expression
+
+`OnCalendar` is expressive but easy to get subtly wrong. Test it before you enable the timer.
+
+```bash
+# Show the next few times the expression would fire
+systemd-analyze calendar 'Mon..Fri 09:00'
+systemd-analyze calendar '*-*-* 03:00:00'
+systemd-analyze calendar 'hourly'
+
+# Normalise a shorthand into its full form
+systemd-analyze calendar 'daily'
+```
+
+*Tip:* `systemd-analyze calendar` prints the normalised expression and the next elapse time. If the next run is not what you expected, the expression is wrong — fix it before enabling the timer.
+
 ## Cron Deep Dive: Syntax, crontab, and anacron
 
 Cron is still the simplest way to schedule a job, and it is present on almost every Linux system. The syntax is compact but unforgiving, and a single misplaced field silently changes when a job runs.
@@ -356,6 +372,35 @@ MAILTO=ops@example.com
 ```
 
 *Tip:* Always use absolute paths in cron jobs, or set `PATH` explicitly. "It works when I run it by hand" is almost always a `PATH` problem.
+
+### The `%` Gotcha
+
+In a crontab, `%` means "newline" and everything after it becomes the command's stdin. A `date +%Y` in a cron job silently truncates the command.
+
+```cron
+# Wrong: % is interpreted by cron, the command becomes "date +"
+0 3 * * * date +%Y-%m-%d >> /var/log/date.log
+
+# Right: escape the percent signs
+0 3 * * * date +\%Y-\%m-\%d >> /var/log/date.log
+```
+
+*Tip:* This only applies to crontabs. Scripts called *from* cron are normal shell scripts and do not need escaping.
+
+### Where cron Files Live
+
+```bash
+# Per-user crontabs
+/var/spool/cron/crontabs/
+
+# System-wide
+/etc/crontab
+/etc/cron.d/
+/etc/cron.daily/
+/etc/cron.hourly/
+```
+
+*Tip:* Files in `/etc/cron.d/` need a **user field** between the schedule and the command, unlike user crontabs. Forgetting it is the most common reason a `/etc/cron.d/` entry never runs.
 
 ### Logging Cron Output
 
