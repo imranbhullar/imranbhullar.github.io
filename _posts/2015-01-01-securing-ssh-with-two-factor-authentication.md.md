@@ -99,3 +99,103 @@ $ ssh centos@destination_host
 Verification code: 
 ```
 Once you enter the 6-digit code from your phone, you're in! You have successfully added a significant layer of security to your server, giving you much-needed peace of mind.
+
+---
+
+## Beyond 2FA: SSH Tunnels, ProxyJump, and ssh-agent
+
+2FA protects the login. These features make the login *useful* once you are in, and they are the ones you will reach for daily.
+
+### SSH Tunnels and Port Forwarding
+
+SSH can forward ports in both directions, which is how you reach a database or a web UI that is not exposed to the internet.
+
+```bash
+# Local forward: reach remote:5432 on localhost:15432
+ssh -L 15432:localhost:5432 user@db-host
+
+# Remote forward: expose local:8080 on remote:8080
+ssh -R 8080:localhost:8080 user@public-host
+
+# Dynamic forward: a SOCKS proxy on localhost:1080
+ssh -D 1080 user@jump-host
+
+# Keep the tunnel alive
+ssh -N -L 15432:localhost:5432 user@db-host
+```
+
+*Tip:* `-N` tells SSH not to run a remote command, which is exactly what you want for a pure tunnel. Combine it with `-f` to background the tunnel after authentication.
+
+### ProxyJump: Hopping Through a Bastion
+
+`ProxyJump` replaces the old `ProxyCommand` incantation and is the cleanest way to reach a host behind a bastion.
+
+```bash
+# One hop
+ssh -J bastion.example.com internal.example.com
+
+# Multiple hops
+ssh -J bastion1.example.com,bastion2.example.com internal.example.com
+
+# In ~/.ssh/config
+Host internal
+    HostName internal.example.com
+    User alice
+    ProxyJump bastion.example.com
+```
+
+*Tip:* `ProxyJump` is the modern replacement for `ssh -o ProxyCommand="ssh -W %h:%p bastion"`. It is shorter, faster, and works with `scp` and `rsync` without extra flags.
+
+### ssh-agent and Key Management
+
+```bash
+# Start the agent
+eval "$(ssh-agent -s)"
+
+# Add a key
+ssh-add ~/.ssh/id_ed25519
+
+# List loaded keys
+ssh-add -l
+
+# Remove all keys
+ssh-add -D
+
+# Forward the agent to a remote host
+ssh -A user@host
+```
+
+*Tip:* Agent forwarding (`-A`) is convenient but risky. Anyone with root on the remote host can use your forwarded agent to authenticate as you. Prefer `ProxyJump` for hopping, and only forward the agent when you genuinely need it.
+
+### Copying Files Securely
+
+```bash
+# scp
+scp file.txt user@host:/tmp/
+
+# scp with a jump host
+scp -J bastion.example.com file.txt user@internal:/tmp/
+
+# sftp
+sftp user@host
+
+# rsync over SSH, the best option for large or repeated transfers
+rsync -avz -e ssh /src/ user@host:/dst/
+```
+
+*Tip:* For anything larger than a few files, use `rsync` over SSH. It resumes partial transfers, preserves permissions, and only sends the differences.
+
+### Hardening the Client
+
+```bash
+# ~/.ssh/config
+
+Host *
+    ServerAliveInterval 60
+    ServerAliveCountMax 3
+    HashKnownHosts yes
+    AddKeysToAgent yes
+    IdentitiesOnly yes
+```
+
+*Tip:* `ServerAliveInterval` keeps idle sessions from being dropped by firewalls and NAT devices. `IdentitiesOnly yes` stops the client from offering every key in the agent, which avoids "too many authentication failures" on servers with a low `MaxAuthTries`.

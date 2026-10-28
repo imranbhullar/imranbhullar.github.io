@@ -279,6 +279,118 @@ WantedBy=timers.target
 
 *Tip:* `systemctl list-timers --all` shows every timer, including inactive ones, along with the last and next run times. It is the fastest way to audit scheduled jobs on a systemd host.
 
+## Cron Deep Dive: Syntax, crontab, and anacron
+
+Cron is still the simplest way to schedule a job, and it is present on almost every Linux system. The syntax is compact but unforgiving, and a single misplaced field silently changes when a job runs.
+
+### The Five Fields
+
+```text
+* * * * * command
+│ │ │ │ │
+│ │ │ │ └── day of week (0-7, 0 and 7 are Sunday)
+│ │ │ └──── month (1-12)
+│ │ └────── day of month (1-31)
+│ └──────── hour (0-23)
+└────────── minute (0-59)
+```
+
+### Common Schedules
+
+```cron
+# Every minute
+* * * * * /usr/local/bin/check.sh
+
+# Every 5 minutes
+*/5 * * * * /usr/local/bin/check.sh
+
+# Every hour at minute 0
+0 * * * * /usr/local/bin/hourly.sh
+
+# Every day at 2:30 a.m.
+30 2 * * * /usr/local/bin/backup.sh
+
+# Every Monday at 9 a.m.
+0 9 * * 1 /usr/local/bin/weekly.sh
+
+# First day of every month at midnight
+0 0 1 * * /usr/local/bin/monthly.sh
+
+# Every weekday at 6 p.m.
+0 18 * * 1-5 /usr/local/bin/report.sh
+```
+
+### Managing crontabs
+
+```bash
+# Edit the current user's crontab
+crontab -e
+
+# List the current user's crontab
+crontab -l
+
+# Remove the current user's crontab
+crontab -r
+
+# Edit another user's crontab (as root)
+sudo crontab -u alice -e
+
+# System-wide crontabs
+ls /etc/cron.d/
+cat /etc/crontab
+```
+
+*Tip:* `crontab -r` deletes the entire crontab without confirmation. If you meant `crontab -e`, you have just lost every scheduled job for that user.
+
+### Environment and PATH
+
+Cron runs jobs with a minimal environment. `PATH` is usually just `/usr/bin:/bin`, which is why scripts that work interactively fail under cron.
+
+```cron
+# Set PATH explicitly at the top of the crontab
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+# Set other environment variables
+SHELL=/bin/bash
+MAILTO=ops@example.com
+```
+
+*Tip:* Always use absolute paths in cron jobs, or set `PATH` explicitly. "It works when I run it by hand" is almost always a `PATH` problem.
+
+### Logging Cron Output
+
+```cron
+# Redirect stdout and stderr to a log file
+30 2 * * * /usr/local/bin/backup.sh >> /var/log/backup.log 2>&1
+
+# Discard output entirely
+30 2 * * * /usr/local/bin/backup.sh >/dev/null 2>&1
+```
+
+*Tip:* By default, cron mails output to the user. On a server with no mail configured, that output is silently lost. Always redirect it to a file or to syslog.
+
+### anacron: For Machines That Are Not Always On
+
+Cron assumes the machine is running at the scheduled time. `anacron` runs missed jobs on the next boot, which is what you want on laptops and workstations.
+
+```bash
+# /etc/anacrontab
+# period  delay  job-identifier  command
+1         5      daily-backup    /usr/local/bin/backup.sh
+7         10     weekly-cleanup  /usr/local/bin/cleanup.sh
+```
+
+*Tip:* `anacron` is not a replacement for cron on servers. It is a complement for machines that may be off at the scheduled time, and it is why desktop systems still run their daily jobs reliably.
+
+### Cron vs. systemd Timers, Revisited
+
+The table earlier in this post summarises the trade-offs. In practice:
+
+* **Use cron** for simple, self-contained jobs, especially on systems where you already have a crontab workflow.
+* **Use systemd timers** when you want logging, dependency ordering, resource limits, or catch-up on missed runs.
+
+*Tip:* `crontab -l` is the fastest way to audit a user's scheduled jobs, and `systemctl list-timers --all` is the equivalent for systemd. Check both when you inherit a host.
+
 ## Overriding Vendor Units Without Editing Them
 
 Drop-in overrides let you change one directive without copying an entire unit file and inheriting its maintenance burden.

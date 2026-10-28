@@ -242,3 +242,74 @@ strace -f -e trace=network -p $(pgrep -f myapp | head -1)
 ```
 
 *Tip:* Work the layers in order: link, address, route, port, application. Skipping ahead is how you end up restarting a service that was never the problem.
+
+## Advanced `ip`: VLANs, Bonds, and Bridges
+
+The `ip` command covers far more than addresses and routes. These are the constructs you will meet on any host with more than one NIC.
+
+```bash
+# Create a VLAN interface on eth0 with VLAN ID 100
+sudo ip link add link eth0 name eth0.100 type vlan id 100
+sudo ip addr add 10.0.100.5/24 dev eth0.100
+sudo ip link set eth0.100 up
+
+# Create a bond from two interfaces
+sudo ip link add bond0 type bond mode active-backup
+sudo ip link set eth0 master bond0
+sudo ip link set eth1 master bond0
+sudo ip addr add 10.0.0.5/24 dev bond0
+sudo ip link set bond0 up
+
+# Create a bridge and attach an interface
+sudo ip link add br0 type bridge
+sudo ip link set eth0 master br0
+sudo ip addr add 10.0.0.5/24 dev br0
+sudo ip link set br0 up
+```
+
+*Tip:* These commands are not persistent. On RHEL family systems, use `nmcli` or `ifcfg` files; on Debian family, use `/etc/network/interfaces` or `netplan`. The `ip` commands are for testing and for understanding what the config files produce.
+
+## ethtool: Link Speed, Duplex, and Driver Info
+
+```bash
+# Link speed and duplex
+sudo ethtool eth0
+
+# Driver and firmware version
+sudo ethtool -i eth0
+
+# Ring buffer and offload settings
+sudo ethtool -k eth0
+
+# Statistics
+sudo ethtool -S eth0
+```
+
+*Tip:* A link that negotiates 100 Mbps half-duplex on a gigabit network is a classic cause of "the network is slow". `ethtool eth0` shows the negotiated speed and duplex in one line.
+
+## nmcli: NetworkManager from the CLI
+
+On most modern desktop and RHEL family systems, NetworkManager owns the network configuration, and `nmcli` is the way to drive it.
+
+```bash
+# Show all connections
+nmcli connection show
+
+# Show device status
+nmcli device status
+
+# Bring a connection up or down
+nmcli connection up eth0
+nmcli connection down eth0
+
+# Create a static connection
+nmcli connection add type ethernet ifname eth0 con-name eth0-static \
+  ipv4.method manual ipv4.addresses 10.0.0.5/24 ipv4.gateway 10.0.0.1 \
+  ipv4.dns 8.8.8.8
+
+# Modify an existing connection
+nmcli connection modify eth0 ipv4.dns "8.8.8.8 1.1.1.1"
+nmcli connection up eth0
+```
+
+*Tip:* `nmcli connection show` lists saved profiles, while `nmcli device status` shows the current state of each interface. When they disagree, the profile exists but is not applied, and `nmcli connection up <name>` fixes it.

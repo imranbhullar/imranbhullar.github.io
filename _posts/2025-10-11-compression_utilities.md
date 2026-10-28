@@ -120,3 +120,97 @@ xzless file.txt.xz
 | CPU Usage         | Low        | High             |
 | Common Usage      | Logs, temp | Archives, source |
 | File Extension    | `.gz`      | `.xz`            |
+
+## 4. rsync: The Backup Workhorse
+
+`rsync` is not a compression tool, but it is the tool you will reach for most often when moving or backing up data. It transfers only the differences between source and destination, which makes it dramatically faster than `scp` or `cp` for repeated transfers.
+
+```bash
+# Local copy, preserving permissions and timestamps
+rsync -av /src/ /dst/
+
+# Remote copy over SSH
+rsync -avz /src/ user@host:/dst/
+
+# Dry run, show what would change
+rsync -avn /src/ /dst/
+
+# Delete files in destination that no longer exist in source
+rsync -av --delete /src/ /dst/
+
+# Exclude patterns
+rsync -av --exclude='*.log' --exclude='.git/' /src/ /dst/
+
+# Resume a partial transfer
+rsync -av --partial --progress /src/ user@host:/dst/
+```
+
+> **Pro Tip:** The trailing slash on the source matters. `rsync -av /src/ /dst/` copies the *contents* of `/src` into `/dst`. `rsync -av /src /dst/` copies the *directory itself*, creating `/dst/src`. This is the single most common rsync mistake.
+
+## 5. dd: Raw Copy and Disk Images
+
+`dd` copies raw bytes. It is the tool for disk images, bootable USB drives, and wiping devices.
+
+```bash
+# Write an ISO to a USB drive
+sudo dd if=image.iso of=/dev/sdb bs=4M status=progress oflag=sync
+
+# Create a disk image
+sudo dd if=/dev/sda of=/backup/sda.img bs=4M status=progress
+
+# Wipe a disk with zeros
+sudo dd if=/dev/zero of=/dev/sdb bs=1M status=progress
+
+# Wipe a disk with random data
+sudo dd if=/dev/urandom of=/dev/sdb bs=1M status=progress
+```
+
+> **Pro Tip:** `dd` has no confirmation prompt and no undo. Double-check `of=` before pressing enter. A single wrong character can destroy a disk.
+
+## 6. Modern Backup Tools: borg and restic
+
+For real backups, `tar` and `rsync` are not enough. You want deduplication, encryption, and retention policies. `borg` and `restic` provide all three.
+
+```bash
+# borg: initialise a repository
+borg init --encryption=repokey /backup/repo
+
+# borg: create an archive
+borg create /backup/repo::backup-{now} /etc /home
+
+# borg: list archives
+borg list /backup/repo
+
+# borg: restore
+borg extract /backup/repo::backup-2026-01-01
+
+# restic: initialise a repository
+restic init --repo /backup/restic
+
+# restic: back up
+restic -r /backup/restic backup /etc /home
+
+# restic: list snapshots
+restic -r /backup/restic snapshots
+
+# restic: restore
+restic -r /backup/restic restore latest --target /restore
+```
+
+> **Pro Tip:** Both tools deduplicate at the block level, so a second backup of the same data is nearly free. Run them from cron or a systemd timer, and always test a restore before you trust the backup.
+
+## Quick Reference
+
+```bash
+# Compress a directory
+tar -czvf archive.tar.gz /etc
+
+# Sync a directory
+rsync -av --delete /src/ /dst/
+
+# Write an ISO to USB
+sudo dd if=image.iso of=/dev/sdb bs=4M status=progress oflag=sync
+
+# Encrypted, deduplicated backup
+restic -r /backup/restic backup /etc /home
+```
