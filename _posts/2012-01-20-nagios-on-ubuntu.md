@@ -5,6 +5,7 @@ date: 2012-01-20 10:00:00 +0000
 description: "A comprehensive step-by-step guide to installing and configuring Nagios Core from source on Ubuntu, including dependency setup and web interface configuration."
 categories: [Tutorials, Linux]
 tags: [nagios, ubuntu, monitoring]
+image: /assets/img/Linux_unix_bsd.png
 ---
 ![nix](/assets/img/Linux_unix_bsd.png)
 

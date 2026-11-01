@@ -6,6 +6,7 @@ description: "!ہم کلامی ۔ میں ڈرتا ہوں "
 categories: [Urdu, nasar]
 tags: [Urdu, Nasar]
 rtl: true
+image: /assets/img/mein-darta-hun.jpeg
 ---
 ![Darna](/assets/img/mein-darta-hun.jpeg)
 

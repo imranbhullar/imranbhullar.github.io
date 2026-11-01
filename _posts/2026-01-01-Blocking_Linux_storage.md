@@ -5,6 +5,7 @@ date: 2011-08-22 10:00:00 -0000
 description: "A step-by-step guide on how to disable USB mass storage devices in Linux by blacklisting the usb_storage module."
 categories: [Linux, Security]
 tags: [LFCS, Tips and Tricks, Linux, SysAdmin]
+image: /assets/img/Linux_unix_bsd.png
 ---
 ![nix](/assets/img/Linux_unix_bsd.png)
 

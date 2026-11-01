@@ -5,6 +5,7 @@ date: 2012-08-01 10:00:00 +0500
 description: "A comprehensive guide on setting up and configuring the Network File System (NFS) protocol for file sharing in UNIX environments."
 categories: [linux, LFCS]
 tags: [nix-howtos, LFCS, nfs, networking, server-configuration, linux]
+image: /assets/img/Linux_unix_bsd.png
 ---
 ![nix](/assets/img/Linux_unix_bsd.png)
 

@@ -5,6 +5,7 @@ date: 2015-01-02 12:00:00 +0000
 description: "Explore why Netcat (nc) is the ultimate multi-purpose tool for port scanning, file transfers, and terminal-based communication."
 categories: [SysAdmin, Networking]
 tags: [netcat, netcat, linux, terminal, tools, networking]
+image: /assets/img/posts/netcat.jpeg
 ---
 ![ssh](/assets/img/posts/netcat.jpeg)
 

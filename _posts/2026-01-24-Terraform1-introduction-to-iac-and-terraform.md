@@ -4,6 +4,7 @@ date: 2026-01-24 15:00:00 +1100
 categories: [DevOps, Terraform]
 tags: [iac, aws, automation, beginners]
 description: An introduction to Infrastructure as Code, declarative vs imperative approaches, and why Terraform is a top choice for DevOps engineers.
+image: /assets/img/terraform-iac.png
 ---
 
 ![Terraform Infrastructure as Code](/assets/img/terraform-iac.png)

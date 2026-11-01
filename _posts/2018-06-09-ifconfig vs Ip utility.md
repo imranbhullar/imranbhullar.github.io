@@ -5,6 +5,7 @@ date: 2018-06-09 14:00:00 +0500
 description: "The classic ifconfig command is being phased out. Learn how to perform common networking tasks using the modern 'ip' utility."
 categories: [Linux, Networking]
 tags: [ifconfig, iproute2, sysadmin, terminal, networking]
+image: /assets/img/posts/iconfig_ip.png
 ---
 ![nix](/assets/img/posts/iconfig_ip.png)
 

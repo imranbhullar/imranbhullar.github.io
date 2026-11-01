@@ -4,6 +4,7 @@ title: "Linux Archiving & Compression: From Tar to Restic"
 date: 2025-10-11
 categories: [Linux, SysAdmin]
 tags: [LFCS, bash, archiving, backup, devops]
+image: /assets/img/Linux_unix_bsd.png
 ---
 ![nix](/assets/img/Linux_unix_bsd.png)
 

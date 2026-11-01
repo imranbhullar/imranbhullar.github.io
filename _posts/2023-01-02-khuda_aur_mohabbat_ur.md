@@ -6,6 +6,7 @@ description: " خُدا اور محبت "
 categories: [Urdu, nasar]
 tags: [Urdu, Nasar]
 rtl: true
+image: /assets/img/khuda_aur_mohabbat.jpeg
 ---
 ![Mohabbat](/assets/img/khuda_aur_mohabbat.jpeg)
 

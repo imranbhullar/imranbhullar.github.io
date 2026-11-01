@@ -5,6 +5,7 @@ date: 2015-06-06 13:00:00 +0500
 description: "Learn how to use the Pexpect Python module to automate CLI interactions with FTP servers, MySQL databases, and network appliances."
 categories: [Automation, Python]
 tags: [pexpect, sysadmin, devops, networking, scripting]
+image: /assets/img/posts/python-automation.png
 ---
 ![nix](/assets/img/posts/python-automation.png)
 

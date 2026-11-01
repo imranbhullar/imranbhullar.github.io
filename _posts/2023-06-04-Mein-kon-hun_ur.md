@@ -6,6 +6,7 @@ description: "ہم کلامی   ۔  میں کون ہوں "
 categories: [Urdu, nasar]
 tags: [Urdu, Nasar]
 rtl: true
+image: /assets/img/mein-kon-hun.jpeg
 ---
 ![Kon](/assets/img/mein-kon-hun.jpeg)
 

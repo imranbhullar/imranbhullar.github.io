@@ -6,6 +6,7 @@ description: " خدا اور بندہ  "
 categories: [Urdu, nasar]
 tags: [Urdu, Nasar]
 rtl: true
+image: /assets/img/khuda_aur_banda.jpeg
 ---
 ![Banda](/assets/img/khuda_aur_banda.jpeg)
 

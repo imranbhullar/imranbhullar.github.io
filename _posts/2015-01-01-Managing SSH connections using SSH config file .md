@@ -5,6 +5,7 @@ date: 2015-01-01 00:00:00 +1100
 description: "Learn how to simplify your DevOps workflow by automating complex SSH commands using the ~/.ssh/config file."
 categories: [DevOps, Linux]
 tags: [ssh, linux-admin, sysadmin, productivity, automation]
+image: /assets/img/posts/ssh.jpg
 ---
 ![ssh](/assets/img/posts/ssh.jpg)
 

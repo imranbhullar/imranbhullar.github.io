@@ -6,6 +6,7 @@ description: "!ہم کلامی ۔ (داستان گوئی ۔ حقیقتِ حیا�
 categories: [Urdu, nasar]
 tags: [Urdu, Nasar]
 rtl: true
+image: /assets/img/Dastan_goi.jpeg
 ---
 ![Dastan](/assets/img/Dastan_goi.jpeg)
 

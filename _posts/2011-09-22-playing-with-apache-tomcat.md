@@ -5,6 +5,7 @@ date: 2011-09-22 10:00:00 +0500
 description: "A beginner's guide to setting up and configuring Apache Tomcat, exploring the basics of Java-based web servers."
 categories: [Java, Web Servers]
 tags: [Apache Tomcat, Java, Web Development, Server Configuration]
+image: /assets/img/Linux_unix_bsd.png
 ---
 ![nix](/assets/img/Linux_unix_bsd.png)
 

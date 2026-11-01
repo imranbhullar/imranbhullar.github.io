@@ -4,6 +4,7 @@ title: "Mastering Linux Permissions: From chmod to umask"
 date: 2025-10-10
 categories: [Linux, DevOps]
 tags: [LFCS, security, terminal, sysadmin]
+image: /assets/img/Linux_unix_bsd.png
 ---
 ![nix](/assets/img/Linux_unix_bsd.png)
 

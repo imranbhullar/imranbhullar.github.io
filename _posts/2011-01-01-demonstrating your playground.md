@@ -5,6 +5,7 @@ date: 2011-01-01 19:15
 categories: [Linux, Tutorials]
 tags: [Tips and Tricks, bash, terminal, productivity, devops]
 description: "A quick and dirty way to share your live terminal session with others on the same system without complex tools."
+image: /assets/img/Linux_unix_bsd.png
 ---
 ![nix](/assets/img/Linux_unix_bsd.png)
 

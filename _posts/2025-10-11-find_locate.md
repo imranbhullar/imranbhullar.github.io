@@ -4,6 +4,7 @@ title: "Mastering Linux File Discovery: The Power of Find and Locate"
 date: 2025-10-11
 categories: [Linux, SysAdmin]
 tags: [LFCS, bash, find, locate, devops]
+image: /assets/img/Linux_unix_bsd.png
 ---
 ![nix](/assets/img/Linux_unix_bsd.png)
 

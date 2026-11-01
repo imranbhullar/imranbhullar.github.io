@@ -6,6 +6,7 @@ description: " منزلِ اعتقاد  "
 categories: [Urdu, nasar]
 tags: [Urdu, Nasar]
 rtl: true
+image: /assets/img/Manzal_e-Atiqad.jpeg
 ---
 ![Mohabbat](/assets/img/Manzal_e-Atiqad.jpeg)
 

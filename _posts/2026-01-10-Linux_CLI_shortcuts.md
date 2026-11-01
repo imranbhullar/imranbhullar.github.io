@@ -5,6 +5,7 @@ date: 2026-01-10
 description: "Core bash shortcuts, navigation tricks."
 categories: [Linux, DevOps]
 tags: [LFCS, Bash, Terminal]
+image: /assets/img/Linux_unix_bsd.png
 ---
 ![nix](/assets/img/Linux_unix_bsd.png)
 

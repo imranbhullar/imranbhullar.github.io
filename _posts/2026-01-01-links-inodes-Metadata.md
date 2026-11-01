@@ -5,6 +5,7 @@ date: 2026-01-01
 description: "A deep dive into hard links vs. symbolic links, directory structures, and file metadata analysis."
 categories: [Linux, DevOps]
 tags: [LFCS, Inodes, Hardlinks, Symlinks]
+image: /assets/img/Linux_unix_bsd.png
 ---
 ![nix](/assets/img/Linux_unix_bsd.png)
 

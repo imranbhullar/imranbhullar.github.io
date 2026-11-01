@@ -5,7 +5,7 @@ description: "A deep dive into substituting users, safe sudoers configuration, a
 date: 2025-10-12
 categories: [LFCS, Linux, DevOps]
 tags: [bash, LFCS, visudo, polkit, su]
-
+image: /assets/img/Linux_unix_bsd.png
 ---
 ![nix](/assets/img/Linux_unix_bsd.png)
 

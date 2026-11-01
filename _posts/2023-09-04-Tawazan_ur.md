@@ -6,6 +6,7 @@ description: "!ھم کلامی ۔ تواز ن "
 categories: [Urdu, nasar]
 tags: [Urdu, Nasar]
 rtl: true
+image: /assets/img/Tawazan.jpeg
 ---
 ![Tawazan](/assets/img/Tawazan.jpeg)
 

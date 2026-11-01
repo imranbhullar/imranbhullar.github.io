@@ -4,6 +4,7 @@ date: 2011-08-15 10:00:00 +1000
 categories: [Unix, Solaris, Virtualization]
 tags: [solaris, zones, virtualization, unix, sysadmin]
 description: A complete step-by-step guide to Solaris Zones explaining concepts, lifecycle, and practical configuration with examples.
+image: /assets/img/Linux_unix_bsd.png
 ---
 ![nix](/assets/img/Linux_unix_bsd.png)
 ## Introduction

@@ -5,6 +5,7 @@ date: 2015-01-01 00:00:00 +0000
 description: "Take your SSH security to the next level by adding a TOTP layer. Learn how to configure Google Authenticator for SSH on Linux."
 categories: [Security, Linux]
 tags: [ssh, 2fa, google-authenticator, centos, hardening]
+image: /assets/img/posts/ssh.jpg
 ---
 ![ssh](/assets/img/posts/ssh.jpg)
 

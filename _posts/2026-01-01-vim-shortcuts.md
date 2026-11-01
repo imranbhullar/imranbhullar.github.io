@@ -5,6 +5,7 @@ date: 2026-01-01
 description: "Vim Shortcuts, Mastering Vim navigation, text replacement patterns, and non-interactive editing with sed for the LFCS exam."
 categories: [Linux, DevOps]
 tags: [LFCS, Vim, Sed, Text Editing, Tips & Tricks]
+image: /assets/img/Linux_unix_bsd.png
 ---
 ![nix](/assets/img/Linux_unix_bsd.png)
 

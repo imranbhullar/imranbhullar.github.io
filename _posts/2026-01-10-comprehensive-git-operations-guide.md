@@ -5,6 +5,7 @@ date: 2026-01-10 21:40:00 +0000
 description: "Master the core Git workflow: from repo initialization and configuration to advanced logging, reverting, and version tagging."
 categories: [DevOps, Guide]
 tags: [Git, Version Control, Linux, Workflow]
+image: /assets/img/Linux_unix_bsd.png
 ---
 ![nix](/assets/img/Linux_unix_bsd.png)
 

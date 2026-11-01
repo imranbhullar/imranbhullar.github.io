@@ -6,6 +6,7 @@ description: "ابنِ آدم اور تنہائی "
 categories: [Urdu, nasar]
 tags: [Urdu, Nasar]
 rtl: true
+image: /assets/img/ibne-adam_tanhai.jpeg
 ---
 ![Tanhai](/assets/img/ibne-adam_tanhai.jpeg)
 

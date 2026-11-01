@@ -6,6 +6,7 @@ description: "ھم کلامی ۔ انسان اور امید"
 categories: [Urdu, nasar]
 tags: [Urdu, Nasar]
 rtl: true
+image: /assets/img/isan-aur-ummeed.jpeg
 ---
 ![Ummeed](/assets/img/isan-aur-ummeed.jpeg)
 

@@ -5,6 +5,7 @@ date: 2015-01-01 10:00:00 +0000
 description: "A guide to setting up secure, key-based SSH authentication to replace complex password management."
 categories: [Tutorials, Security]
 tags: [ssh, linux, devops, sysadmin, openssh]
+image: /assets/img/posts/ssh.jpg
 ---
 ![ssh](/assets/img/posts/ssh.jpg)
 

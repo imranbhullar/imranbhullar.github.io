@@ -5,6 +5,7 @@ date: 2025-10-10
 description: "A journey through the history of UNIX, the birth of Linux, and the evolution of the major distributions like RedHat and Solaris."
 categories: [Linux, History]
 tags: [LFCS, UNIX, Linux, RedHat, OpenSource]
+image: /assets/img/Linux_unix_bsd.png
 ---
 ![nix](/assets/img/Linux_unix_bsd.png)
 

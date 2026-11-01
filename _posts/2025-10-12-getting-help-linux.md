@@ -5,6 +5,7 @@ date: 2025-10-12 13:40:00 +0500
 categories: [Linux, Tutorial]
 tags: [LFCS, Command Line, SysAdmin, Troubleshooting, Documentation]
 description: "Don't get stuck in the terminal. Learn the essential commands to find documentation, manuals, and command usage directly from the Linux CLI."
+image: /assets/img/Linux_unix_bsd.png
 ---
 ![nix](/assets/img/Linux_unix_bsd.png)
 

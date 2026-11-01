@@ -5,6 +5,7 @@ description: "A guide on achieving IPS-like package management functionality in 
 date: 2011-08-15 12:00:00 +0000
 categories: [nix Howto's]
 tags: [solaris, ips, opencsw, blastwave]
+image: /assets/img/Linux_unix_bsd.png
 ---
 ![nix](/assets/img/Linux_unix_bsd.png)
 
