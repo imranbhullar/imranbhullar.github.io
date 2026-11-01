@@ -11,7 +11,6 @@ description: "A quick and dirty way to share your live terminal session with oth
 Sometimes you may want to share what you're doing in the terminal with others in real-time. While tools like `tmux` or `screen` are powerful, there is a simpler way to broadcast your session to a file that others can watch.
 
 ## The Broadcast Command
-The -f flag tells tail to "follow" the file, meaning it will update the
 To start sharing, switch to the shell you want to display and use the following command structure:
 
 ```bash
@@ -30,4 +29,4 @@ Once you've started the broadcast, anyone else on the same system (or with acces
 $ tail -f /tmp/show
 ```
 
-The -f flag tells tail to "follow" the file, meaning it will update the
+The `-f` flag tells `tail` to "follow" the file, meaning it will update the screen with new lines in real-time as they are written, giving the watcher a live view of your terminal session.

@@ -35,6 +35,9 @@ java version "1.7.0"
 Java(TM) SE Runtime Environment (build 1.7.0-b147)
 Java HotSpot(TM) Client VM (build 21.0-b17, mixed mode, sharing)
 ```
+
+> **Note:** JDK 7 is long out of support, and Oracle's old direct `.rpm` download links no longer work — downloads now require an Oracle account and the Java download page. Use your distribution's package manager (e.g. `apt install openjdk-17-jdk` or `dnf install java-17-openjdk`) for a current JDK instead.
+
 * Downloading & Installing Tomcat
 
 ```bash
@@ -53,9 +56,11 @@ Java HotSpot(TM) Client VM (build 21.0-b17, mixed mode, sharing)
 
 You can control the Tomcat server using the scripts located in the `/bin` directory:
 
-* **Start Server:** * Windows: `startup.bat`
+* **Start Server:**
+    * Windows: `startup.bat`
     * Linux/Mac: `./startup.sh`
-* **Stop Server:** * Windows: `shutdown.bat`
+* **Stop Server:**
+    * Windows: `shutdown.bat`
     * Linux/Mac: `./shutdown.sh`
 
 Once started, you can verify the installation by navigating to `http://localhost:8080` in your web browser. You should see the default Tomcat welcome page.
