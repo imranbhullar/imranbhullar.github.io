@@ -8,7 +8,6 @@ tags: [Urdu, Nasar]
 rtl: true
 image: /assets/img/isan-aur-ummeed.jpeg
 ---
-![Ummeed](/assets/img/isan-aur-ummeed.jpeg)
 
 <p align="right" dir="rtl">
  

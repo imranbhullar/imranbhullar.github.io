@@ -8,7 +8,6 @@ tags: [Urdu, Nasar]
 rtl: true
 image: /assets/img/mein-darta-hun.jpeg
 ---
-![Darna](/assets/img/mein-darta-hun.jpeg)
 
 <p align="right" dir="rtl">
  

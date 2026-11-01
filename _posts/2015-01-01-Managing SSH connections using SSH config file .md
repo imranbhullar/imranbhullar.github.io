@@ -7,8 +7,6 @@ categories: [DevOps, Linux]
 tags: [ssh, linux-admin, sysadmin, productivity, automation]
 image: /assets/img/posts/ssh.jpg
 ---
-![ssh](/assets/img/posts/ssh.jpg)
-
 
 One of the biggest messes a *nix admin has to handle is the list of all servers, their SSH ports, usernames, keys, and more. While there are dedicated SSH connection managers available, it can be hard for a Linux admin to leave the terminal—especially when working on a remote machine like a jump or bastion host without a GUI.
 

@@ -7,7 +7,6 @@ tags: [Tips and Tricks, bash, terminal, productivity, devops]
 description: "A quick and dirty way to share your live terminal session with others on the same system without complex tools."
 image: /assets/img/Linux_unix_bsd.png
 ---
-![nix](/assets/img/Linux_unix_bsd.png)
 
 Sometimes you may want to share what you're doing in the terminal with others in real-time. While tools like `tmux` or `screen` are powerful, there is a simpler way to broadcast your session to a file that others can watch.
 

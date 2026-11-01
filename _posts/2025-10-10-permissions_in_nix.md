@@ -6,7 +6,6 @@ categories: [Linux, DevOps]
 tags: [LFCS, security, terminal, sysadmin]
 image: /assets/img/Linux_unix_bsd.png
 ---
-![nix](/assets/img/Linux_unix_bsd.png)
 
 Understanding how Linux handles file access is a cornerstone of system administration. Whether you are troubleshooting a "Permission Denied" error or securing a web server, you need to know how to manipulate the permission bits effectively.
 

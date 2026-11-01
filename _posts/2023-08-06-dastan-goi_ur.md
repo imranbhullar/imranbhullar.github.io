@@ -8,7 +8,6 @@ tags: [Urdu, Nasar]
 rtl: true
 image: /assets/img/Dastan_goi.jpeg
 ---
-![Dastan](/assets/img/Dastan_goi.jpeg)
 
 <p align="right" dir="rtl">
  

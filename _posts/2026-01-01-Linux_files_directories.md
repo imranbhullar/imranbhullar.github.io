@@ -7,7 +7,6 @@ categories: [Tips and Tricks, Linux]
 tags: [LFCS, Directories, Files]
 image: /assets/img/Linux_unix_bsd.png
 ---
-![nix](/assets/img/Linux_unix_bsd.png)
 
 Whether you are a sysadmin or a hobbyist, the Linux terminal offers incredible power if you know the right shortcuts. Here is a curated list of tips to help you manage files and directories like a pro.
 

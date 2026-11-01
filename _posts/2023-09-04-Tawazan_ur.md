@@ -8,7 +8,6 @@ tags: [Urdu, Nasar]
 rtl: true
 image: /assets/img/Tawazan.jpeg
 ---
-![Tawazan](/assets/img/Tawazan.jpeg)
 
 <p align="right" dir="rtl">
  

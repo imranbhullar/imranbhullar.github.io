@@ -7,7 +7,6 @@ categories: [SysAdmin, Networking]
 tags: [netcat, netcat, linux, terminal, tools, networking]
 image: /assets/img/posts/netcat.jpeg
 ---
-![ssh](/assets/img/posts/netcat.jpeg)
 
 From the day I started my career as a *nix admin, I always used to wonder why people don't use multi-purpose tools or better alternates for existing ones. That is where **Netcat (nc)** kicked in—a zillion times better alternative to telnet with tons of functionality. 
 

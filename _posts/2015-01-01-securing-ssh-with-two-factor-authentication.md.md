@@ -7,8 +7,6 @@ categories: [Security, Linux]
 tags: [ssh, 2fa, google-authenticator, centos, hardening]
 image: /assets/img/posts/ssh.jpg
 ---
-![ssh](/assets/img/posts/ssh.jpg)
-
 
 In a previous post, we looked at how to set up passwordless SSH authentication to get rid of managing "creepy" passwords. Today, we’re taking security to the next level by enabling **Two-Factor Authentication (2FA)**. By doing this, even if your private key is lost or stolen, an attacker still won't be able to log in to your machines without the time-based token.
 

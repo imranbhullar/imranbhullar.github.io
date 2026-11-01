@@ -6,7 +6,6 @@ categories: [Linux, SysAdmin]
 tags: [LFCS, bash, find, locate, devops]
 image: /assets/img/Linux_unix_bsd.png
 ---
-![nix](/assets/img/Linux_unix_bsd.png)
 
 In the world of Linux administration, being able to find the right file quickly is a superpower. While there are many ways to search, two tools stand above the rest: `find` and `locate`. 
 

@@ -7,8 +7,6 @@ description: An introduction to Infrastructure as Code, declarative vs imperativ
 image: /assets/img/terraform-iac.png
 ---
 
-![Terraform Infrastructure as Code](/assets/img/terraform-iac.png)
-
 ## Introduction
 
 Welcome to the first post in my series on modern DevOps practices. Whether you are a seasoned Linux administrator or a junior DevOps engineer, understanding **Infrastructure as Code (IaC)** is the single most important step in moving toward cloud-scale automation.

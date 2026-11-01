@@ -7,7 +7,6 @@ categories: [Automation, Python]
 tags: [pexpect, sysadmin, devops, networking, scripting]
 image: /assets/img/posts/python-automation.png
 ---
-![nix](/assets/img/posts/python-automation.png)
 
 Ever wanted to automate some boring tasks while managing a bench of remote machines? Today we will play with **Pexpect**, an "Expect-like" Python module which can be used to interact with almost any application that has a Command Line Interface (CLI).
 

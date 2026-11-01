@@ -7,7 +7,6 @@ categories: [Tutorials, Security]
 tags: [ssh, linux, devops, sysadmin, openssh]
 image: /assets/img/posts/ssh.jpg
 ---
-![ssh](/assets/img/posts/ssh.jpg)
 
 I still remember the days when one had to remember long passwords to login to network machines. From a security perspective, since "each and every machine" had to use a different password, teams started to store their passwords in different encrypted or password-protected files. It felt a bit funny having a "master password" just to access all the other network passwords!
 

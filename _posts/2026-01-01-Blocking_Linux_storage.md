@@ -7,7 +7,6 @@ categories: [Linux, Security]
 tags: [LFCS, Tips and Tricks, Linux, SysAdmin]
 image: /assets/img/Linux_unix_bsd.png
 ---
-![nix](/assets/img/Linux_unix_bsd.png)
 
 ## Disabling Mass Storage in Linux-Based Distros
 

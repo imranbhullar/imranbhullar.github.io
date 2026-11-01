@@ -7,7 +7,6 @@ tags: [LFCS, Command Line, SysAdmin, Troubleshooting, Documentation]
 description: "Don't get stuck in the terminal. Learn the essential commands to find documentation, manuals, and command usage directly from the Linux CLI."
 image: /assets/img/Linux_unix_bsd.png
 ---
-![nix](/assets/img/Linux_unix_bsd.png)
 
 In the world of Linux and Unix, you don't need to memorize every flag and argument. You just need to know how to find them. Whether you are troubleshooting a production server or building a new Terraform module, these built-in help systems are your best friends.
 

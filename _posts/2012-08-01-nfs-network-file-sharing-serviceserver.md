@@ -7,7 +7,6 @@ categories: [linux, LFCS]
 tags: [nix-howtos, LFCS, nfs, networking, server-configuration, linux]
 image: /assets/img/Linux_unix_bsd.png
 ---
-![nix](/assets/img/Linux_unix_bsd.png)
 
 NFS (Network File System) is a protocol used for file sharing within UNIX environments. Windows users typically cannot access these shared files, as NFS is specifically designed for UNIX systems.
 

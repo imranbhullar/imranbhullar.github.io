@@ -8,7 +8,6 @@ tags: [Urdu, Nasar]
 rtl: true
 image: /assets/img/mein-kon-hun.jpeg
 ---
-![Kon](/assets/img/mein-kon-hun.jpeg)
 
 <p align="right" dir="rtl">
  

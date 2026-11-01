@@ -8,7 +8,6 @@ tags: [Urdu, Nasar]
 rtl: true
 image: /assets/img/Manzal_e-Atiqad.jpeg
 ---
-![Mohabbat](/assets/img/Manzal_e-Atiqad.jpeg)
 
 <p align="right" dir="rtl">
 کُل شب  جب رات کے دھندلکے نے دِن کے اُجالے  کو اپنی عمیق سیاہ چادر سے لپیٹ لیا تو میں شہر کی رنگینیوں سے دُور نِکل  آیا تاکہ قدرت کے مظاہر کو قریب سے دیکھ سکوں جِس سے شائد میری قوتِ  اعتقاد کو جِلا ملے۔ 

@@ -7,7 +7,6 @@ categories: [Linux, DevOps]
 tags: [LFCS, Bash, Terminal]
 image: /assets/img/Linux_unix_bsd.png
 ---
-![nix](/assets/img/Linux_unix_bsd.png)
 
 ## Terminal Navigation & Shortcuts
 

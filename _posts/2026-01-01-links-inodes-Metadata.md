@@ -7,7 +7,6 @@ categories: [Linux, DevOps]
 tags: [LFCS, Inodes, Hardlinks, Symlinks]
 image: /assets/img/Linux_unix_bsd.png
 ---
-![nix](/assets/img/Linux_unix_bsd.png)
 
 ## Hard Links vs. Symbolic Links
 

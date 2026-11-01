@@ -7,7 +7,6 @@ categories: [Linux, History]
 tags: [LFCS, UNIX, Linux, RedHat, OpenSource]
 image: /assets/img/Linux_unix_bsd.png
 ---
-![nix](/assets/img/Linux_unix_bsd.png)
 
 ## The Era of Giants
 

@@ -7,7 +7,6 @@ categories: [Linux, DevOps]
 tags: [LFCS, Vim, Sed, Text Editing, Tips & Tricks]
 image: /assets/img/Linux_unix_bsd.png
 ---
-![nix](/assets/img/Linux_unix_bsd.png)
 
 ## Advanced Vim Search and Replace
 

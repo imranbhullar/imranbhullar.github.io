@@ -7,7 +7,6 @@ categories: [Java, Web Servers]
 tags: [Apache Tomcat, Java, Web Development, Server Configuration]
 image: /assets/img/Linux_unix_bsd.png
 ---
-![nix](/assets/img/Linux_unix_bsd.png)
 
 Apache Tomcat is an open-source web server and servlet container developed by the Apache Software Foundation. It implements several Java EE specifications including Java Servlet, JavaServer Pages (JSP), Java EL, and WebSocket, and provides a "pure Java" HTTP web server environment in which Java code can run.
 

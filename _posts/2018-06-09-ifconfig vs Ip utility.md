@@ -7,7 +7,6 @@ categories: [Linux, Networking]
 tags: [ifconfig, iproute2, sysadmin, terminal, networking]
 image: /assets/img/posts/iconfig_ip.png
 ---
-![nix](/assets/img/posts/iconfig_ip.png)
 
 Like most system admins, I love the standard set of Unix commands we've used for decades. One of the most widely used has always been `ifconfig`. However, as many of you have noticed, `ifconfig` is being replaced by the more powerful `ip` command.
 

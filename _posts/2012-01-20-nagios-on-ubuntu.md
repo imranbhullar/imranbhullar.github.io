@@ -7,7 +7,6 @@ categories: [Tutorials, Linux]
 tags: [nagios, ubuntu, monitoring]
 image: /assets/img/Linux_unix_bsd.png
 ---
-![nix](/assets/img/Linux_unix_bsd.png)
 
 Nagios is a powerful monitoring system that enables organizations to identify and resolve IT infrastructure problems before they affect critical business processes. In this post, I will walk through the basic steps to get Nagios up and running on an Ubuntu system.
 

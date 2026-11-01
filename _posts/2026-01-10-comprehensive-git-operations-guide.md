@@ -7,7 +7,6 @@ categories: [DevOps, Guide]
 tags: [Git, Version Control, Linux, Workflow]
 image: /assets/img/Linux_unix_bsd.png
 ---
-![nix](/assets/img/Linux_unix_bsd.png)
 
 Efficient version control is the foundation of any solid DevOps pipeline. Whether you are managing infrastructure code or software applications, mastering these basic Git operations is essential for maintaining a clean and traceable project history.
 

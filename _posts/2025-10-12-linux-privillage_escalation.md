@@ -7,7 +7,6 @@ categories: [LFCS, Linux, DevOps]
 tags: [bash, LFCS, visudo, polkit, su]
 image: /assets/img/Linux_unix_bsd.png
 ---
-![nix](/assets/img/Linux_unix_bsd.png)
 
 In Linux administration, managing how users gain elevated privileges is a fundamental skill. Whether you are moving between accounts or granting administrative rights, doing it correctly is the difference between a secure system and a broken one.
 

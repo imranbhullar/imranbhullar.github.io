@@ -6,7 +6,7 @@ tags: [solaris, zones, virtualization, unix, sysadmin]
 description: A complete step-by-step guide to Solaris Zones explaining concepts, lifecycle, and practical configuration with examples.
 image: /assets/img/Linux_unix_bsd.png
 ---
-![nix](/assets/img/Linux_unix_bsd.png)
+
 ## Introduction
 
 Solaris Zones provide **operating system–level virtualization**, allowing multiple isolated environments to run on a single Solaris instance.  

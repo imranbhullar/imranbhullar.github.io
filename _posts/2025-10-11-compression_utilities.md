@@ -6,7 +6,6 @@ categories: [Linux, SysAdmin]
 tags: [LFCS, bash, archiving, backup, devops]
 image: /assets/img/Linux_unix_bsd.png
 ---
-![nix](/assets/img/Linux_unix_bsd.png)
 
 Efficiently managing files is a cornerstone of Linux administration. Whether you are backing up a configuration directory like `/etc` or preparing files for a deployment, understanding the nuances of `tar`, `cpio`, and various compression algorithms is essential.
 

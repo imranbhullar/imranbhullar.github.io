@@ -8,7 +8,6 @@ tags: [Urdu, Nasar]
 rtl: true
 image: /assets/img/ibne-adam_tanhai.jpeg
 ---
-![Tanhai](/assets/img/ibne-adam_tanhai.jpeg)
 
 <p align="right" dir="rtl">
  
